@@ -2,7 +2,6 @@
     "name": "duaneenterprises/monday-v2-sdk",
     "description": "A comprehensive PHP SDK for Monday.com's GraphQL API",
     "type": "library",
-    "version": "1.0.0",
     "license": "MIT",
     "authors": [
         {
