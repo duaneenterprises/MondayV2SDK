@@ -1,5 +1,9 @@
 # Monday.com V2 SDK for PHP
 
+[![CI](https://github.com/duaneenterprises/monday-v2-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/duaneenterprises/monday-v2-sdk/actions/workflows/ci.yml)
+[![PHP Version](https://img.shields.io/badge/php-8.1%2B-blue.svg)](https://php.net)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 A comprehensive PHP SDK for the Monday.com API V2, built to align with the official Monday.com GraphQL schema.
 
 ## Features
