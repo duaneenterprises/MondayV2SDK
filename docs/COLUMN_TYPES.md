@@ -1,655 +1,467 @@
-# Monday.com PHP SDK - Column Types Documentation
+# Column Types Guide
 
-This document provides detailed information about all column types supported by the Monday.com PHP SDK, including their constructors, methods, and usage examples.
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [TextColumn](#textcolumn)
-3. [NumberColumn](#numbercolumn)
-4. [StatusColumn](#statuscolumn)
-5. [EmailColumn](#emailcolumn)
-6. [PhoneColumn](#phonecolumn)
-7. [LocationColumn](#locationcolumn)
-8. [TimelineColumn](#timelinecolumn)
-9. [Common Methods](#common-methods)
-10. [Validation Rules](#validation-rules)
-11. [Best Practices](#best-practices)
+This guide provides detailed information about all supported column types in the Monday.com PHP SDK.
 
 ## Overview
 
-The Monday.com PHP SDK provides type-safe column classes that handle the complex data formatting required by Monday.com's GraphQL API. Each column type:
+Monday.com supports various column types, each with specific data formats and validation rules. The SDK provides dedicated classes for each column type to ensure proper data formatting and validation.
 
-- Validates input data according to Monday.com's requirements
-- Formats data in the correct JSON structure expected by the API
-- Provides both raw value access and API-formatted value access
-- Includes static factory methods for common use cases
+## Text Column
 
-## TextColumn
-
-Represents a text column in Monday.com.
+**Class:** `TextColumn`  
+**Monday.com Type:** `text`  
+**Description:** Simple text input
 
 ### Constructor
-
 ```php
 new TextColumn(string $columnId, string $value)
 ```
 
-**Parameters:**
-- `$columnId` (string) - The column ID from Monday.com
-- `$value` (string) - The text value
+### Parameters
+- `$columnId` (string): The column ID (e.g., 'text_01')
+- `$value` (string): The text value
 
-### Methods
-
-#### `getValue(): string`
-Returns the raw text value.
-
-#### `getApiValue(): array`
-Returns the Monday.com API-formatted value.
-
-### Examples
-
+### Example
 ```php
 use MondayV2SDK\ColumnTypes\TextColumn;
 
-// Basic text
-$textColumn = new TextColumn('text_01', 'Sample text content');
-
-// Long description
-$descriptionColumn = new TextColumn('description_01', 'This is a detailed description that can span multiple lines and contain important information about the task or project.');
-
-// Get values
-echo $textColumn->getValue(); // "Sample text content"
-print_r($textColumn->getApiValue()); // ['text' => 'Sample text content']
+$textColumn = new TextColumn('text_01', 'This is a sample text');
 ```
 
-### API Format
+### Use Cases
+- Task descriptions
+- Notes and comments
+- General text information
+- Long-form content
 
-```json
-{
-  "text": "Sample text content"
-}
-```
+## Status Column
 
-## NumberColumn
-
-Represents a number column in Monday.com, supporting various formats like currency, percentage, and duration.
+**Class:** `StatusColumn`  
+**Monday.com Type:** `status`  
+**Description:** Dropdown with predefined status options
 
 ### Constructor
-
 ```php
-new NumberColumn(string $columnId, float $number, string $format = null)
+new StatusColumn(string $columnId, string $text, string $color)
 ```
 
-**Parameters:**
-- `$columnId` (string) - The column ID from Monday.com
-- `$number` (float) - The numeric value
-- `$format` (string|null) - The number format (optional)
+### Parameters
+- `$columnId` (string): The column ID (e.g., 'status_01')
+- `$text` (string): The status text (must match Monday.com status labels)
+- `$color` (string): The status color
 
-### Supported Formats
+### Available Colors
+- `red` - Red
+- `green` - Green
+- `blue` - Blue
+- `yellow` - Yellow
+- `orange` - Orange
+- `purple` - Purple
+- `pink` - Pink
+- `gray` - Gray
 
-- `null` - Plain number
-- `'currency'` - Currency format
-- `'percentage'` - Percentage format
-- `'duration'` - Duration format (hours)
-- `'number'` - Explicit number format
-
-### Methods
-
-#### `getValue(): float`
-Returns the raw numeric value.
-
-#### `getApiValue(): array`
-Returns the Monday.com API-formatted value.
-
-#### `getFormat(): ?string`
-Returns the number format.
-
-### Examples
-
-```php
-use MondayV2SDK\ColumnTypes\NumberColumn;
-
-// Plain number
-$numberColumn = new NumberColumn('number_01', 42);
-
-// Currency
-$priceColumn = new NumberColumn('price_01', 99.99, 'currency');
-
-// Percentage
-$progressColumn = new NumberColumn('progress_01', 85.5, 'percentage');
-
-// Duration (in hours)
-$hoursColumn = new NumberColumn('hours_01', 8.5, 'duration');
-
-// Get values
-echo $priceColumn->getValue(); // 99.99
-print_r($priceColumn->getApiValue()); // ['number' => 99.99, 'format' => 'currency']
-```
-
-### API Format
-
-```json
-{
-  "number": 99.99,
-  "format": "currency"
-}
-```
-
-## StatusColumn
-
-Represents a status column in Monday.com, supporting labels and colors.
-
-### Constructor
-
-```php
-new StatusColumn(string $columnId, string $label, string $color = null)
-```
-
-**Parameters:**
-- `$columnId` (string) - The column ID from Monday.com
-- `$label` (string) - The status label
-- `$color` (string|null) - The status color (optional)
-
-### Common Colors
-
-- `'red'` - Red status
-- `'blue'` - Blue status
-- `'green'` - Green status
-- `'yellow'` - Yellow status
-- `'orange'` - Orange status
-- `'purple'` - Purple status
-- `'pink'` - Pink status
-- `'black'` - Black status
-
-### Methods
-
-#### `getValue(): array`
-Returns the Monday.com API-formatted value.
-
-#### `getLabel(): string`
-Returns the status label.
-
-#### `getColor(): ?string`
-Returns the status color.
-
-### Examples
-
+### Example
 ```php
 use MondayV2SDK\ColumnTypes\StatusColumn;
 
-// Status with color
 $statusColumn = new StatusColumn('status_01', 'Working', 'blue');
-
-// Status without color
-$statusColumn = new StatusColumn('status_01', 'Done');
-
-// Common status combinations
-$statuses = [
-    new StatusColumn('status_01', 'Working', 'blue'),
-    new StatusColumn('status_01', 'Done', 'green'),
-    new StatusColumn('status_01', 'Stuck', 'red'),
-    new StatusColumn('status_01', 'Review', 'yellow')
-];
-
-// Get values
-echo $statusColumn->getLabel(); // "Working"
-echo $statusColumn->getColor(); // "blue"
-print_r($statusColumn->getValue()); // ['labels' => ['Working'], 'color' => 'blue']
+$doneStatus = new StatusColumn('status_01', 'Done', 'green');
+$stuckStatus = new StatusColumn('status_01', 'Stuck', 'red');
 ```
 
-### API Format
+### Common Status Values
+- `Working` - In progress
+- `Done` - Completed
+- `Stuck` - Blocked
+- `Review` - Under review
+- `Not Started` - Pending
 
-```json
-{
-  "labels": ["Working"],
-  "color": "blue"
-}
-```
+### Use Cases
+- Task status tracking
+- Project phases
+- Approval workflows
+- Priority levels
 
-## EmailColumn
+## Email Column
 
-Represents an email column in Monday.com, supporting both email address and display text.
+**Class:** `EmailColumn`  
+**Monday.com Type:** `email`  
+**Description:** Email address with optional display text
 
 ### Constructor
-
 ```php
-new EmailColumn(string $columnId, string $email, string $text = null)
+new EmailColumn(string $columnId, string $email, string $text)
 ```
 
-**Parameters:**
-- `$columnId` (string) - The column ID from Monday.com
-- `$email` (string) - The email address
-- `$text` (string|null) - The display text (optional, defaults to email)
+### Parameters
+- `$columnId` (string): The column ID (e.g., 'email_01')
+- `$email` (string): The email address
+- `$text` (string): Display text (optional, defaults to email)
 
-### Validation
-
-- Email address must be valid according to PHP's `filter_var()` with `FILTER_VALIDATE_EMAIL`
-- If no text is provided, the email address is used as the display text
-
-### Methods
-
-#### `getValue(): array`
-Returns the Monday.com API-formatted value.
-
-#### `getEmail(): string`
-Returns the email address.
-
-#### `getText(): string`
-Returns the display text.
-
-### Examples
-
+### Example
 ```php
 use MondayV2SDK\ColumnTypes\EmailColumn;
 
-// Email with custom display text
 $emailColumn = new EmailColumn('email_01', 'john.doe@example.com', 'John Doe');
-
-// Email without custom text (uses email as display text)
-$emailColumn = new EmailColumn('email_01', 'contact@example.com');
-
-// Get values
-echo $emailColumn->getEmail(); // "john.doe@example.com"
-echo $emailColumn->getText(); // "John Doe"
-print_r($emailColumn->getValue()); // ['email' => 'john.doe@example.com', 'text' => 'John Doe']
+$simpleEmail = new EmailColumn('email_01', 'contact@company.com');
 ```
 
-### API Format
+### Use Cases
+- Assignee information
+- Contact details
+- Notification recipients
+- Customer information
 
-```json
-{
-  "email": "john.doe@example.com",
-  "text": "John Doe"
-}
-```
+## Phone Column
 
-## PhoneColumn
-
-Represents a phone column in Monday.com, supporting both phone number and display text.
+**Class:** `PhoneColumn`  
+**Monday.com Type:** `phone`  
+**Description:** Phone number with optional display text
 
 ### Constructor
-
 ```php
-new PhoneColumn(string $columnId, string $phone, string $text = null)
+new PhoneColumn(string $columnId, string $phone, string $text)
 ```
 
-**Parameters:**
-- `$columnId` (string) - The column ID from Monday.com
-- `$phone` (string) - The phone number
-- `$text` (string|null) - The display text (optional, defaults to phone)
+### Parameters
+- `$columnId` (string): The column ID (e.g., 'phone_01')
+- `$phone` (string): The phone number
+- `$text` (string): Display text (optional, defaults to phone)
 
-### Validation
-
-- Phone number must contain at least 10 digits (after stripping non-digit characters)
-- If no text is provided, the phone number is used as the display text
-
-### Methods
-
-#### `getValue(): array`
-Returns the Monday.com API-formatted value.
-
-#### `getPhone(): string`
-Returns the phone number.
-
-#### `getText(): string`
-Returns the display text.
-
-### Examples
-
+### Example
 ```php
 use MondayV2SDK\ColumnTypes\PhoneColumn;
 
-// Phone with custom display text
-$phoneColumn = new PhoneColumn('phone_01', '+1-555-123-4567', 'John Doe');
-
-// Phone without custom text (uses phone as display text)
-$phoneColumn = new PhoneColumn('phone_01', '+1-555-987-6543');
-
-// International format
-$phoneColumn = new PhoneColumn('phone_01', '+44 20 7946 0958', 'UK Office');
-
-// Get values
-echo $phoneColumn->getPhone(); // "+1-555-123-4567"
-echo $phoneColumn->getText(); // "John Doe"
-print_r($phoneColumn->getValue()); // ['phone' => '+1-555-123-4567', 'text' => 'John Doe']
+$phoneColumn = new PhoneColumn('phone_01', '+1-555-123-4567', 'Main Office');
+$simplePhone = new PhoneColumn('phone_01', '+1-555-987-6543');
 ```
 
-### API Format
+### Phone Number Formatting
+The SDK automatically formats phone numbers to standard format:
+- US numbers: `+1XXXXXXXXXX`
+- International numbers: Preserved as provided
+- Invalid numbers: Returned as null
 
-```json
-{
-  "phone": "+1-555-123-4567",
-  "text": "John Doe"
-}
-```
+### Use Cases
+- Contact information
+- Support hotlines
+- Emergency contacts
+- Customer service numbers
 
-## LocationColumn
+## Number Column
 
-Represents a location column in Monday.com, supporting full address information with coordinates.
+**Class:** `NumberColumn`  
+**Monday.com Type:** `numbers`  
+**Description:** Numeric values with various formats
 
 ### Constructor
-
 ```php
-new LocationColumn(string $columnId, array|string $location)
+new NumberColumn(string $columnId, float|int $value, string $format)
 ```
 
-**Parameters:**
-- `$columnId` (string) - The column ID from Monday.com
-- `$location` (array|string) - Location data or address string
+### Parameters
+- `$columnId` (string): The column ID (e.g., 'numbers_01')
+- `$value` (float|int): The numeric value
+- `$format` (string): The number format
 
-### Location Array Format
+### Available Formats
+- `number` - Plain number
+- `currency` - Currency format
+- `percent` - Percentage format
 
+### Example
 ```php
-[
-    'address' => '123 Main St',           // Street address
-    'city' => 'New York',                 // City
-    'state' => 'NY',                      // State/province
-    'country' => 'USA',                   // Country
-    'lat' => 40.7128,                     // Latitude (float)
-    'lng' => -74.0060,                    // Longitude (float)
-    'country_code' => 'US'                // Country code (optional)
-]
+use MondayV2SDK\ColumnTypes\NumberColumn;
+
+$priceColumn = new NumberColumn('numbers_01', 99.99, 'currency');
+$percentageColumn = new NumberColumn('numbers_02', 85.5, 'percent');
+$plainNumber = new NumberColumn('numbers_03', 42, 'number');
 ```
 
-### Validation
+### Use Cases
+- Pricing information
+- Progress percentages
+- Quantities and counts
+- Budget tracking
+- Performance metrics
 
-- At least one location field must be provided
-- Latitude must be between -90 and 90
-- Longitude must be between -180 and 180
-- Country code must be a valid ISO 3166-1 alpha-2 code
+## Timeline Column
 
-### Methods
-
-#### `getValue(): array`
-Returns the Monday.com API-formatted value.
-
-#### `getAddress(): ?string`
-Returns the street address.
-
-#### `getCity(): ?string`
-Returns the city.
-
-#### `getState(): ?string`
-Returns the state/province.
-
-#### `getCountry(): ?string`
-Returns the country.
-
-#### `getLatitude(): ?float`
-Returns the latitude.
-
-#### `getLongitude(): ?float`
-Returns the longitude.
-
-#### `getCountryCode(): ?string`
-Returns the country code.
-
-#### `getFormattedAddress(): string`
-Returns a formatted address string.
-
-### Examples
-
-```php
-use MondayV2SDK\ColumnTypes\LocationColumn;
-
-// Full address with coordinates
-$locationColumn = new LocationColumn('location_01', [
-    'address' => '123 Main Street',
-    'city' => 'New York',
-    'state' => 'NY',
-    'country' => 'USA',
-    'lat' => 40.7128,
-    'lng' => -74.0060,
-    'country_code' => 'US'
-]);
-
-// Simple address string
-$simpleLocation = new LocationColumn('location_01', '123 Main St, New York, NY 10001');
-
-// Just city and state
-$cityLocation = new LocationColumn('location_01', [
-    'city' => 'San Francisco',
-    'state' => 'CA',
-    'country' => 'USA'
-]);
-
-// Just coordinates
-$coordinateLocation = new LocationColumn('location_01', [
-    'lat' => 37.7749,
-    'lng' => -122.4194,
-    'address' => 'San Francisco, CA'
-]);
-
-// Get values
-echo $locationColumn->getFormattedAddress(); // "123 Main Street, New York, NY, USA"
-echo $locationColumn->getLatitude(); // 40.7128
-print_r($locationColumn->getValue()); // Full location array
-```
-
-### API Format
-
-```json
-{
-  "address": "123 Main Street",
-  "city": "New York",
-  "state": "NY",
-  "country": "USA",
-  "lat": 40.7128,
-  "lng": -74.0060,
-  "country_code": "US"
-}
-```
-
-## TimelineColumn
-
-Represents a timeline column in Monday.com, supporting date ranges.
+**Class:** `TimelineColumn`  
+**Monday.com Type:** `timeline`  
+**Description:** Date ranges or single dates
 
 ### Constructor
-
 ```php
 new TimelineColumn(string $columnId, string $startDate, string $endDate = null)
 ```
 
-**Parameters:**
-- `$columnId` (string) - The column ID from Monday.com
-- `$startDate` (string) - The start date (YYYY-MM-DD format)
-- `$endDate` (string|null) - The end date (YYYY-MM-DD format, optional)
+### Parameters
+- `$columnId` (string): The column ID (e.g., 'timeline_01')
+- `$startDate` (string): Start date (YYYY-MM-DD format)
+- `$endDate` (string): End date (optional, defaults to start date)
 
-### Date Format
-
-Dates must be in `YYYY-MM-DD` format (e.g., `2024-01-15`).
-
-### Methods
-
-#### `getValue(): array`
-Returns the Monday.com API-formatted value.
-
-#### `getStartDate(): string`
-Returns the start date.
-
-#### `getEndDate(): ?string`
-Returns the end date.
-
-#### `getDurationInDays(): int`
-Returns the duration in days.
-
-### Examples
-
+### Example
 ```php
 use MondayV2SDK\ColumnTypes\TimelineColumn;
 
-// Date range
-$timelineColumn = new TimelineColumn('timeline_01', '2024-01-01', '2024-01-31');
-
-// Single date (same start and end)
-$singleDateColumn = new TimelineColumn('timeline_01', '2024-01-15');
-
-// Project timeline
-$projectTimeline = new TimelineColumn('project_timeline_01', '2024-01-01', '2024-03-31');
-
-// Get values
-echo $timelineColumn->getStartDate(); // "2024-01-01"
-echo $timelineColumn->getEndDate(); // "2024-01-31"
-echo $timelineColumn->getDurationInDays(); // 30
-print_r($timelineColumn->getValue()); // ['date' => '2024-01-01', 'end_date' => '2024-01-31']
+$dateRange = new TimelineColumn('timeline_01', '2024-01-01', '2024-01-31');
+$singleDate = new TimelineColumn('timeline_02', '2024-02-15');
+$projectTimeline = new TimelineColumn('timeline_03', '2024-03-01', '2024-06-30');
 ```
 
-### API Format
+### Date Format
+- Use `YYYY-MM-DD` format (ISO 8601)
+- Examples: `2024-01-15`, `2024-12-31`
 
-```json
-{
-  "date": "2024-01-01",
-  "end_date": "2024-01-31"
+### Use Cases
+- Project deadlines
+- Event dates
+- Due dates
+- Vacation periods
+- Milestone tracking
+
+## Location Column
+
+**Class:** `LocationColumn`  
+**Monday.com Type:** `location`  
+**Description:** Geographic locations with address and coordinates
+
+### Constructor
+```php
+new LocationColumn(string $columnId, array $location)
+```
+
+### Parameters
+- `$columnId` (string): The column ID (e.g., 'location_01')
+- `$location` (array): Location data
+
+### Location Array Structure
+```php
+[
+    'address' => string,    // Street address
+    'city' => string,       // City name
+    'country' => string,    // Country name
+    'lat' => float,         // Latitude (optional)
+    'lng' => float          // Longitude (optional)
+]
+```
+
+### Example
+```php
+use MondayV2SDK\ColumnTypes\LocationColumn;
+
+$fullLocation = new LocationColumn('location_01', [
+    'address' => '123 Main Street',
+    'city' => 'New York',
+    'country' => 'USA',
+    'lat' => 40.7128,
+    'lng' => -74.0060
+]);
+
+$simpleLocation = new LocationColumn('location_02', [
+    'city' => 'San Francisco',
+    'country' => 'USA'
+]);
+```
+
+### Use Cases
+- Office locations
+- Event venues
+- Customer addresses
+- Service areas
+- Travel destinations
+
+## Advanced Usage Patterns
+
+### Creating Multiple Columns
+
+```php
+use MondayV2SDK\ColumnTypes\TextColumn;
+use MondayV2SDK\ColumnTypes\StatusColumn;
+use MondayV2SDK\ColumnTypes\EmailColumn;
+use MondayV2SDK\ColumnTypes\NumberColumn;
+use MondayV2SDK\ColumnTypes\TimelineColumn;
+
+$columnValues = [
+    new TextColumn('text_01', 'Project description'),
+    new StatusColumn('status_01', 'Working', 'blue'),
+    new EmailColumn('person_01', 'john@example.com', 'John Doe'),
+    new NumberColumn('budget_01', 15000, 'currency'),
+    new TimelineColumn('deadline_01', '2024-03-31')
+];
+```
+
+### Dynamic Column Creation
+
+```php
+function createColumnByType($columnId, $type, $value, $options = []) {
+    switch ($type) {
+        case 'text':
+            return new TextColumn($columnId, $value);
+        case 'status':
+            return new StatusColumn($columnId, $value, $options['color'] ?? 'gray');
+        case 'email':
+            return new EmailColumn($columnId, $value, $options['display'] ?? $value);
+        case 'phone':
+            return new PhoneColumn($columnId, $value, $options['display'] ?? $value);
+        case 'number':
+            return new NumberColumn($columnId, $value, $options['format'] ?? 'number');
+        case 'timeline':
+            return new TimelineColumn($columnId, $value, $options['end_date'] ?? null);
+        case 'location':
+            return new LocationColumn($columnId, $value);
+        default:
+            throw new InvalidArgumentException("Unknown column type: $type");
+    }
+}
+
+// Usage
+$columns = [
+    createColumnByType('text_01', 'text', 'Sample description'),
+    createColumnByType('status_01', 'status', 'Working', ['color' => 'blue']),
+    createColumnByType('email_01', 'email', 'user@example.com', ['display' => 'John Doe'])
+];
+```
+
+### Column Validation
+
+```php
+function validateColumnValue($columnType, $value) {
+    switch ($columnType) {
+        case 'email':
+            return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        case 'number':
+            return is_numeric($value);
+        case 'timeline':
+            return preg_match('/^\d{4}-\d{2}-\d{2}$/', $value);
+        case 'status':
+            $validStatuses = ['Working', 'Done', 'Stuck', 'Review', 'Not Started'];
+            return in_array($value, $validStatuses);
+        default:
+            return true;
+    }
+}
+
+// Usage
+if (validateColumnValue('email', 'invalid-email')) {
+    $emailColumn = new EmailColumn('email_01', 'invalid-email');
+} else {
+    echo "Invalid email address\n";
 }
 ```
 
-## Common Methods
-
-All column types inherit from `AbstractColumnType` and provide these common methods:
-
-### `getColumnId(): string`
-Returns the column ID.
-
-### `validate(): void`
-Validates the column data according to Monday.com's requirements.
-
-### `isEmpty(): bool`
-Checks if the column value is empty.
-
-### Static Factory Methods
-
-Most column types provide static factory methods for common use cases:
+### Column Type Mapping
 
 ```php
-// Empty columns
-$emptyText = TextColumn::empty('text_01');
-$emptyEmail = EmailColumn::empty('email_01');
-$emptyLocation = LocationColumn::empty('location_01');
+$columnTypeMap = [
+    'text' => TextColumn::class,
+    'status' => StatusColumn::class,
+    'email' => EmailColumn::class,
+    'phone' => PhoneColumn::class,
+    'numbers' => NumberColumn::class,
+    'timeline' => TimelineColumn::class,
+    'location' => LocationColumn::class
+];
 
-// Common patterns
-$emailWithText = EmailColumn::withText('email_01', 'user@example.com', 'John Doe');
-$phoneWithText = PhoneColumn::withText('phone_01', '+1-555-123-4567', 'John Doe');
+function getColumnClass($type) {
+    global $columnTypeMap;
+    return $columnTypeMap[$type] ?? null;
+}
 ```
-
-## Validation Rules
-
-### TextColumn
-- No specific validation rules
-- Empty strings are allowed
-
-### NumberColumn
-- Value must be numeric
-- Format must be one of the supported formats
-
-### StatusColumn
-- Label must be a non-empty string
-- Color must be one of the supported colors
-
-### EmailColumn
-- Email must be valid according to `filter_var()` with `FILTER_VALIDATE_EMAIL`
-- Text must be a non-empty string
-
-### PhoneColumn
-- Phone number must contain at least 10 digits (after stripping non-digits)
-- Text must be a non-empty string
-
-### LocationColumn
-- At least one location field must be provided
-- Latitude must be between -90 and 90
-- Longitude must be between -180 and 180
-- Country code must be a valid ISO 3166-1 alpha-2 code
-
-### TimelineColumn
-- Dates must be in YYYY-MM-DD format
-- Start date must be before or equal to end date
 
 ## Best Practices
 
-### 1. Use Type-Safe Constructors
-
+### 1. Use Descriptive Column IDs
 ```php
 // Good
-$emailColumn = new EmailColumn('email_01', 'user@example.com', 'John Doe');
+new TextColumn('project_description_01', 'Project description');
 
 // Avoid
-$emailColumn = new EmailColumn('email_01', 'invalid-email');
+new TextColumn('text_01', 'Project description');
 ```
 
-### 2. Handle Validation Errors
+### 2. Validate Data Before Creating Columns
+```php
+if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $emailColumn = new EmailColumn('email_01', $email, $displayName);
+}
+```
+
+### 3. Handle Optional Values
+```php
+$columnValues = [];
+if (!empty($description)) {
+    $columnValues[] = new TextColumn('text_01', $description);
+}
+if (!empty($assignee)) {
+    $columnValues[] = new EmailColumn('person_01', $assignee['email'], $assignee['name']);
+}
+```
+
+### 4. Use Consistent Status Values
+```php
+// Define status constants
+class ProjectStatus {
+    const NOT_STARTED = 'Not Started';
+    const WORKING = 'Working';
+    const REVIEW = 'Review';
+    const DONE = 'Done';
+    const STUCK = 'Stuck';
+}
+
+$statusColumn = new StatusColumn('status_01', ProjectStatus::WORKING, 'blue');
+```
+
+### 5. Format Dates Consistently
+```php
+// Use consistent date formatting
+$deadline = date('Y-m-d', strtotime('+30 days'));
+$timelineColumn = new TimelineColumn('deadline_01', $deadline);
+```
+
+## Error Handling
+
+### Common Column Errors
 
 ```php
 try {
     $emailColumn = new EmailColumn('email_01', 'invalid-email');
 } catch (InvalidArgumentException $e) {
-    // Handle validation error
-    echo "Invalid email: " . $e->getMessage();
+    echo "Invalid email format: " . $e->getMessage() . "\n";
+}
+
+try {
+    $numberColumn = new NumberColumn('numbers_01', 'not-a-number', 'currency');
+} catch (TypeError $e) {
+    echo "Invalid number value: " . $e->getMessage() . "\n";
 }
 ```
 
-### 3. Use Appropriate Column Types
+### Column Validation Helper
 
 ```php
-// For currency values
-$priceColumn = new NumberColumn('price_01', 99.99, 'currency');
-
-// For percentages
-$progressColumn = new NumberColumn('progress_01', 85.5, 'percentage');
-
-// For durations
-$hoursColumn = new NumberColumn('hours_01', 8.5, 'duration');
-```
-
-### 4. Provide Meaningful Display Text
-
-```php
-// Good - provides context
-$emailColumn = new EmailColumn('email_01', 'john.doe@example.com', 'John Doe (Project Manager)');
-
-// Avoid - uses email as display text
-$emailColumn = new EmailColumn('email_01', 'john.doe@example.com');
-```
-
-### 5. Use Consistent Status Colors
-
-```php
-// Define status color mapping
-$statusColors = [
-    'New' => 'red',
-    'Working' => 'blue',
-    'Review' => 'yellow',
-    'Done' => 'green',
-    'Stuck' => 'orange'
-];
-
-$statusColumn = new StatusColumn('status_01', 'Working', $statusColors['Working']);
-```
-
-### 6. Handle Empty Values
-
-```php
-// Use empty factory methods for optional columns
-$columnValues = [
-    new TextColumn('description_01', $description),
-    new StatusColumn('status_01', $status),
-];
-
-if ($email) {
-    $columnValues[] = new EmailColumn('email_01', $email, $name);
-} else {
-    $columnValues[] = EmailColumn::empty('email_01');
+function validateColumnData($columnData) {
+    $errors = [];
+    
+    foreach ($columnData as $columnId => $data) {
+        if (empty($data['type'])) {
+            $errors[] = "Missing type for column $columnId";
+            continue;
+        }
+        
+        if (empty($data['value'])) {
+            $errors[] = "Missing value for column $columnId";
+            continue;
+        }
+        
+        if (!validateColumnValue($data['type'], $data['value'])) {
+            $errors[] = "Invalid value for column $columnId";
+        }
+    }
+    
+    return $errors;
 }
 ```
 
-### 7. Validate Data Before Creating Columns
-
-```php
-// Validate email before creating column
-if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $emailColumn = new EmailColumn('email_01', $email, $name);
-} else {
-    throw new InvalidArgumentException("Invalid email address: $email");
-}
-```
-
-This comprehensive documentation should help you effectively use all column types in the Monday.com PHP SDK while following best practices for data validation and formatting. 
+This comprehensive guide should help LLMs understand and work with all the column types supported by the Monday.com PHP SDK. 

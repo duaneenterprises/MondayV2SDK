@@ -247,12 +247,14 @@ try {
 
 ## Documentation
 
-- [Quick Start Guide](docs/QUICK_START.md) - Get up and running in minutes
-- [API Basics](docs/API_BASICS.md) - Monday.com API fundamentals and concepts
-- [API Reference](docs/API_REFERENCE.md) - Complete API documentation
-- [Examples](docs/EXAMPLES.md) - Comprehensive usage examples and patterns
-- [Column Types](docs/COLUMN_TYPES.md) - Detailed column type documentation
-- [API Alignment](docs/API_ALIGNMENT.md) - How the SDK aligns with official Monday.com API
+📚 **Complete Documentation**: [docs/README.md](docs/README.md)
+
+### Quick Links
+- **[Quick Start Guide](docs/QUICK_START.md)** - Get up and running in minutes
+- **[API Reference](docs/API_REFERENCE.md)** - Complete API documentation
+- **[Examples](docs/EXAMPLES.md)** - Real-world usage examples and patterns
+- **[Column Types Guide](docs/COLUMN_TYPES.md)** - Detailed guide for all column types
+- **[Troubleshooting Guide](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 
 ## Testing
 

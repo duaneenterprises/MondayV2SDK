@@ -1,224 +1,144 @@
-# Monday.com PHP SDK - Quick Start Guide
-
-Get up and running with the Monday.com PHP SDK in minutes!
-
-## Prerequisites
-
-- PHP 8.0 or higher
-- Composer
-- Monday.com API token
+# Quick Start Guide
 
 ## Installation
-
-### Via Composer (Recommended)
 
 ```bash
 composer require duaneenterprises/monday-v2-sdk
 ```
-
-### Manual Installation
-
-1. Download the SDK files
-2. Include the autoloader in your project
-3. Add the SDK to your namespace
-
-## Get Your API Token
-
-1. Go to [Monday.com](https://monday.com)
-2. Navigate to **Admin** → **API**
-3. Copy your API token
 
 ## Basic Usage
 
 ### 1. Initialize the Client
 
 ```php
-<?php
-
-require_once 'vendor/autoload.php';
-
 use MondayV2SDK\MondayClient;
 
-// Initialize with your API token
-$client = new MondayClient('your-api-token-here');
+$client = new MondayClient('your-api-token');
 ```
 
-### 2. Create Your First Item
+### 2. Create an Item
 
 ```php
 use MondayV2SDK\ColumnTypes\TextColumn;
 use MondayV2SDK\ColumnTypes\StatusColumn;
+use MondayV2SDK\ColumnTypes\EmailColumn;
 
-// Create a simple item
 $item = $client->items()->create([
-    'board_id' => 1234567890,  // Replace with your board ID
-    'item_name' => 'My First Task',
+    'board_id' => 1234567890,
+    'item_name' => 'New Task',
     'column_values' => [
-        new TextColumn('text_01', 'This is my first task description'),
-        new StatusColumn('status_01', 'Working', 'blue')
+        new TextColumn('text_column_id', 'Task description'),
+        new StatusColumn('status_column_id', 'Working', 'blue'),
+        new EmailColumn('email_column_id', 'user@example.com', 'John Doe')
     ]
 ]);
-
-echo "Created item: " . $item['name'] . " (ID: " . $item['id'] . ")";
 ```
 
-### 3. Get Items from a Board
+### 3. Get All Items
 
 ```php
-// Get all items from a board
-$result = $client->items()->getAll(1234567890);  // Replace with your board ID
+$result = $client->items()->getAll(1234567890, ['limit' => 100]);
+$items = $result['items'];
+$cursor = $result['cursor'];
 
-foreach ($result['items'] as $item) {
-    echo "Item: " . $item['name'] . "\n";
+// Get next page
+if ($cursor) {
+    $nextPage = $client->items()->getNextPage($cursor);
 }
 ```
 
-### 4. Search for Items
+### 4. Search Items
 
 ```php
-// Search for items with specific status
 $items = $client->items()->searchByColumnValues(1234567890, [
-    'status_01' => 'Working'
+    'status_column_id' => 'Working'
 ]);
-
-echo "Found " . count($items) . " items with 'Working' status\n";
 ```
 
-## Common Column Types
+### 5. Update an Item
+
+```php
+$updatedItem = $client->items()->update(1234567891, [
+    'column_values' => [
+        new StatusColumn('status_column_id', 'Done', 'green')
+    ]
+]);
+```
+
+### 6. Delete an Item
+
+```php
+$client->items()->delete(1234567891);
+```
+
+## Column Types
 
 ### Text Column
 ```php
-new TextColumn('text_01', 'Your text here');
+new TextColumn('column_id', 'text value')
 ```
 
 ### Status Column
 ```php
-new StatusColumn('status_01', 'Working', 'blue');
+new StatusColumn('column_id', 'status text', 'color')
+// Colors: red, green, blue, yellow, orange, purple, pink, gray
 ```
 
 ### Email Column
 ```php
-new EmailColumn('email_01', 'user@example.com', 'John Doe');
+new EmailColumn('column_id', 'email@example.com', 'display name')
+```
+
+### Phone Column
+```php
+new PhoneColumn('column_id', '+1-555-123-4567', 'display name')
 ```
 
 ### Number Column
 ```php
-new NumberColumn('number_01', 42, 'currency');  // currency, percentage, duration
+new NumberColumn('column_id', 123.45, 'currency') // or 'number', 'percent'
 ```
 
 ### Timeline Column
 ```php
-new TimelineColumn('timeline_01', '2024-01-01', '2024-01-31');
+new TimelineColumn('column_id', '2024-01-01', '2024-01-31')
+```
+
+### Location Column
+```php
+new LocationColumn('column_id', [
+    'address' => '123 Main St',
+    'city' => 'New York',
+    'country' => 'USA',
+    'lat' => 40.7128,
+    'lng' => -74.0060
+])
 ```
 
 ## Error Handling
 
 ```php
 try {
-    $item = $client->items()->create([
-        'board_id' => 1234567890,
-        'item_name' => 'Test Item'
-    ]);
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+    $item = $client->items()->create($data);
+} catch (MondayApiException $e) {
+    echo "API Error: " . $e->getMessage();
+} catch (RateLimitException $e) {
+    echo "Rate limited. Retry after: " . $e->getRetryAfter() . " seconds";
 }
 ```
 
-## Complete Example
+## Configuration
 
 ```php
-<?php
-
-require_once 'vendor/autoload.php';
-
-use MondayV2SDK\MondayClient;
-use MondayV2SDK\ColumnTypes\TextColumn;
-use MondayV2SDK\ColumnTypes\StatusColumn;
-use MondayV2SDK\ColumnTypes\EmailColumn;
-use MondayV2SDK\ColumnTypes\NumberColumn;
-use MondayV2SDK\ColumnTypes\TimelineColumn;
-
-// Initialize client
-$client = new MondayClient('your-api-token-here');
-
-// Board ID (replace with your actual board ID)
-$boardId = 1234567890;
-
-try {
-    // Create a comprehensive item
-    $item = $client->items()->create([
-        'board_id' => $boardId,
-        'item_name' => 'Website Redesign Project',
-        'column_values' => [
-            new TextColumn('description_01', 'Complete redesign of company website'),
-            new StatusColumn('status_01', 'Working', 'blue'),
-            new EmailColumn('client_01', 'client@example.com', 'Client Contact'),
-            new NumberColumn('budget_01', 15000, 'currency'),
-            new TimelineColumn('deadline_01', '2024-03-31')
-        ]
-    ]);
-    
-    echo "✅ Created item: " . $item['name'] . "\n";
-    
-    // Get all items
-    $result = $client->items()->getAll($boardId);
-    echo "📋 Total items in board: " . count($result['items']) . "\n";
-    
-    // Search for working items
-    $workingItems = $client->items()->searchByColumnValues($boardId, [
-        'status_01' => 'Working'
-    ]);
-    echo "🔧 Items with 'Working' status: " . count($workingItems) . "\n";
-    
-} catch (Exception $e) {
-    echo "❌ Error: " . $e->getMessage() . "\n";
-}
-```
-
-## Next Steps
-
-1. **Find Your Board ID**: Use the Monday.com interface to get your board ID
-2. **Explore Column Types**: Check out the [Column Types Documentation](COLUMN_TYPES.md)
-3. **Read Examples**: See [Comprehensive Examples](EXAMPLES.md)
-4. **API Reference**: Consult the [API Reference](API_REFERENCE.md)
-
-## Troubleshooting
-
-### Common Issues
-
-**"Invalid API token"**
-- Verify your API token is correct
-- Ensure the token has the necessary permissions
-
-**"Board not found"**
-- Check that the board ID is correct
-- Ensure your API token has access to the board
-
-**"Column not found"**
-- Verify the column ID exists in your board
-- Column IDs are usually in format like `text_01`, `status_01`, etc.
-
-### Getting Help
-
-- Check the [API Reference](API_REFERENCE.md) for detailed method documentation
-- Review [Examples](EXAMPLES.md) for common use cases
-- Ensure you're using the latest version of the SDK
-
-## Configuration Options
-
-```php
-$client = new MondayClient('your-api-token', [
-    'timeout' => 30,                    // HTTP timeout
+$client = new MondayClient('api-token', [
+    'timeout' => 30,
     'rate_limit' => [
-        'minute_limit' => 100,          // Requests per minute
-        'daily_limit' => 1000           // Requests per day
+        'minute_limit' => 100,
+        'daily_limit' => 1000
     ],
     'logging' => [
-        'level' => 'info',              // Log level
-        'enabled' => true,              // Enable logging
-        'file' => '/path/to/logs/monday.log'
+        'level' => 'debug',
+        'enabled' => true
     ]
 ]);
-```
-
-That's it! You're now ready to integrate Monday.com into your PHP application. 🚀 
+``` 
