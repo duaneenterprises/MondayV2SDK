@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, phar, reflection, session, simplexml, spl, standard, tokenizer, xml, xmlreader, xmlwriter, zip, zlib
+        tools: composer:v2
+        
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+      
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+          
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+      
+    - name: Run PHP syntax check
+      run: find src tests -name "*.php" -exec php -l {} \;
+      
+    - name: Run tests
+      run: vendor/bin/phpunit --coverage-text
+      
+    - name: Run PHPStan static analysis
+      run: vendor/bin/phpstan analyse --no-progress
+      
+    - name: Run PHP CodeSniffer
+      run: vendor/bin/phpcs --standard=PSR12 src tests 
