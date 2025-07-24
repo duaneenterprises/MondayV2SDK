@@ -4,7 +4,7 @@ namespace MondayV2SDK\Core\Configuration;
 
 /**
  * Rate limiting configuration
- * 
+ *
  * Encapsulates all rate limiting settings with proper validation
  * and default values.
  */
@@ -39,7 +39,7 @@ class RateLimitConfig
 
     /**
      * Create from array configuration
-     * 
+     *
      * @param  array<string, mixed> $config
      * @return self
      */
@@ -56,7 +56,7 @@ class RateLimitConfig
 
     /**
      * Convert to array for backward compatibility
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -72,7 +72,7 @@ class RateLimitConfig
 
     /**
      * Get minute limit
-     * 
+     *
      * @return int
      */
     public function getMinuteLimit(): int
@@ -82,7 +82,7 @@ class RateLimitConfig
 
     /**
      * Get daily limit
-     * 
+     *
      * @return int
      */
     public function getDailyLimit(): int
@@ -92,7 +92,7 @@ class RateLimitConfig
 
     /**
      * Get retry delay
-     * 
+     *
      * @return int
      */
     public function getRetryDelay(): int
@@ -102,7 +102,7 @@ class RateLimitConfig
 
     /**
      * Get cleanup interval
-     * 
+     *
      * @return int
      */
     public function getCleanupInterval(): int
@@ -112,7 +112,7 @@ class RateLimitConfig
 
     /**
      * Get max array size
-     * 
+     *
      * @return int
      */
     public function getMaxArraySize(): int
@@ -122,7 +122,7 @@ class RateLimitConfig
 
     /**
      * Validate configuration values
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     private function validate(): void
@@ -151,4 +151,4 @@ class RateLimitConfig
             throw new \InvalidArgumentException('Daily limit cannot be less than minute limit');
         }
     }
-} 
+}

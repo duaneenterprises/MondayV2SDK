@@ -11,7 +11,7 @@ use MondayV2SDK\Exceptions\RateLimitException;
 
 /**
  * HTTP client for Monday.com GraphQL API
- * 
+ *
  * Handles all HTTP communication with Monday.com's GraphQL endpoint,
  * including authentication, request formatting, and response parsing.
  */
@@ -19,18 +19,18 @@ class HttpClient implements HttpClientInterface
 {
     private const API_URL = 'https://api.monday.com/v2';
     private const API_VERSION = '2023-10';
-    
+
     private GuzzleClientInterface $guzzleClient;
     private string $apiToken;
     /**
-     * @var array<string, mixed> 
+     * @var array<string, mixed>
      */
     private array $config;
     private Logger $logger;
 
     /**
      * Constructor
-     * 
+     *
      * @param string               $apiToken Monday.com API token
      * @param array<string, mixed> $config   Configuration options
      */
@@ -39,7 +39,7 @@ class HttpClient implements HttpClientInterface
         $this->apiToken = $apiToken;
         $this->config = $config;
         $this->logger = new Logger($config['logging'] ?? []);
-        
+
         $this->initializeGuzzleClient();
     }
 
@@ -64,7 +64,7 @@ class HttpClient implements HttpClientInterface
 
     /**
      * Execute a GraphQL query
-     * 
+     *
      * @param  string               $query     GraphQL query
      * @param  array<string, mixed> $variables Query variables
      * @return array<string, mixed> Response data
@@ -77,7 +77,7 @@ class HttpClient implements HttpClientInterface
 
     /**
      * Execute a GraphQL mutation
-     * 
+     *
      * @param  string               $mutation  GraphQL mutation
      * @param  array<string, mixed> $variables Mutation variables
      * @return array<string, mixed> Response data
@@ -90,7 +90,7 @@ class HttpClient implements HttpClientInterface
 
     /**
      * Execute GraphQL request
-     * 
+     *
      * @param  string               $graphql   GraphQL query or mutation
      * @param  array<string, mixed> $variables Variables
      * @return array<string, mixed> Response data
@@ -104,7 +104,8 @@ class HttpClient implements HttpClientInterface
         ];
 
         $this->logger->info(
-            'Executing GraphQL request', [
+            'Executing GraphQL request',
+            [
             'query' => $graphql,
             'variables' => $variables,
             ]
@@ -112,7 +113,8 @@ class HttpClient implements HttpClientInterface
 
         try {
             $response = $this->guzzleClient->post(
-                '', [
+                '',
+                [
                 'json' => $payload,
                 ]
             );
@@ -131,7 +133,8 @@ class HttpClient implements HttpClientInterface
             }
 
             $this->logger->info(
-                'GraphQL response received', [
+                'GraphQL response received',
+                [
                 'status_code' => $statusCode,
                 'response_size' => strlen($body),
                 ]
@@ -161,15 +164,15 @@ class HttpClient implements HttpClientInterface
             }
 
             return $data['data'] ?? [];
-
         } catch (RequestException $e) {
             $this->logger->error(
-                'HTTP request failed', [
+                'HTTP request failed',
+                [
                 'error' => $e->getMessage(),
                 'code' => $e->getCode(),
                 ]
             );
-            
+
             throw new MondayApiException(
                 "HTTP request failed: {$e->getMessage()}",
                 $e->getCode(),
@@ -180,22 +183,23 @@ class HttpClient implements HttpClientInterface
 
     /**
      * Handle GraphQL errors from response
-     * 
+     *
      * @param  array<int, array<string, mixed>> $errors GraphQL errors
      * @throws MondayApiException
      */
     private function handleGraphQLErrors(array $errors): void
     {
         $errorMessages = [];
-        
+
         foreach ($errors as $error) {
             $message = $error['message'] ?? 'Unknown GraphQL error';
             $extensions = $error['extensions'] ?? [];
-            
+
             $errorMessages[] = $message;
-            
+
             $this->logger->error(
-                'GraphQL error', [
+                'GraphQL error',
+                [
                 'message' => $message,
                 'extensions' => $extensions,
                 ]
@@ -211,7 +215,7 @@ class HttpClient implements HttpClientInterface
 
     /**
      * Check if response indicates rate limiting
-     * 
+     *
      * @param  \Psr\Http\Message\ResponseInterface $response
      * @return bool
      */
@@ -222,7 +226,7 @@ class HttpClient implements HttpClientInterface
 
     /**
      * Get retry-after value from response headers
-     * 
+     *
      * @param  \Psr\Http\Message\ResponseInterface $response
      * @return int
      */
@@ -234,10 +238,10 @@ class HttpClient implements HttpClientInterface
 
     /**
      * Get Guzzle client (for testing)
-     * 
-     * @return Client
+     *
+     * @return GuzzleClientInterface
      */
-    public function getGuzzleClient(): Client
+    public function getGuzzleClient(): GuzzleClientInterface
     {
         return $this->guzzleClient;
     }
@@ -261,49 +265,52 @@ class HttpClient implements HttpClientInterface
         if (empty($phoneNumber)) {
             return null;
         }
-        
+
         // Remove all non-digit characters except + and spaces
         $cleaned = preg_replace('/[^\d\s\+]/', '', $phoneNumber);
-        
+
         // Remove spaces - ensure $cleaned is a string
         $cleaned = str_replace(' ', '', (string) $cleaned);
-        
+
         // Check if it starts with +1 (US country code)
         if (preg_match('/^\+1(\d{10})$/', $cleaned, $matches)) {
             $formatted = '+1' . $matches[1];
             $this->logger->info(
-                'Formatted phone number with country code', [
+                'Formatted phone number with country code',
+                [
                 'original' => $phoneNumber,
                 'formatted' => $formatted
                 ]
             );
             return $formatted;
         }
-        
+
         // Check if it starts with 1 and has 11 digits total (US number without +)
         if (preg_match('/^1(\d{10})$/', $cleaned, $matches)) {
             $formatted = '+1' . $matches[1];
             $this->logger->info(
-                'Formatted phone number with country code', [
+                'Formatted phone number with country code',
+                [
                 'original' => $phoneNumber,
                 'formatted' => $formatted
                 ]
             );
             return $formatted;
         }
-        
+
         // Check if it's exactly 10 digits (US number without country code)
         if (preg_match('/^(\d{10})$/', $cleaned, $matches)) {
             $formatted = $matches[1];
             $this->logger->info(
-                'Formatted phone number without country code', [
+                'Formatted phone number without country code',
+                [
                 'original' => $phoneNumber,
                 'formatted' => $formatted
                 ]
             );
             return $formatted;
         }
-        
+
         // If it doesn't match any pattern, return the cleaned version if it has at least 10 digits
         if (strlen($cleaned) >= 10) {
             // Extract the last 10 digits
@@ -311,7 +318,8 @@ class HttpClient implements HttpClientInterface
             if (preg_match('/^\d{10}$/', $lastTen)) {
                 $formatted = $lastTen;
                 $this->logger->info(
-                    'Extracted last 10 digits from phone number', [
+                    'Extracted last 10 digits from phone number',
+                    [
                     'original' => $phoneNumber,
                     'formatted' => $formatted
                     ]
@@ -319,12 +327,13 @@ class HttpClient implements HttpClientInterface
                 return $formatted;
             }
         }
-        
+
         $this->logger->warning(
-            'Could not format phone number', [
+            'Could not format phone number',
+            [
             'phone_number' => $phoneNumber
             ]
         );
         return null;
     }
-} 
+}

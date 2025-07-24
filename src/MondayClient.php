@@ -14,7 +14,7 @@ use MondayV2SDK\Core\Logger;
 
 /**
  * Main client for Monday.com API V2
- * 
+ *
  * This class serves as the entry point for all Monday.com API operations.
  * It provides access to various services for managing boards, items, columns, etc.
  */
@@ -23,7 +23,7 @@ class MondayClient
     private HttpClientInterface $httpClient;
     private RateLimiter $rateLimiter;
     private Logger $logger;
-    
+
     private BoardService $boardService;
     private ItemService $itemService;
     private ColumnService $columnService;
@@ -32,7 +32,7 @@ class MondayClient
 
     /**
      * Constructor
-     * 
+     *
      * @param string               $apiToken Monday.com API token
      * @param array<string, mixed> $config   Configuration options
      */
@@ -41,7 +41,7 @@ class MondayClient
         $this->httpClient = new HttpClient($apiToken, $config);
         $this->rateLimiter = new RateLimiter($config['rate_limit'] ?? []);
         $this->logger = new Logger($config['logging'] ?? []);
-        
+
         $this->initializeServices();
     }
 
@@ -123,7 +123,7 @@ class MondayClient
 
     /**
      * Execute a custom GraphQL query
-     * 
+     *
      * @param  string               $query     GraphQL query
      * @param  array<string, mixed> $variables Query variables
      * @return array<string, mixed> Response data
@@ -135,7 +135,7 @@ class MondayClient
 
     /**
      * Execute a custom GraphQL mutation
-     * 
+     *
      * @param  string               $mutation  GraphQL mutation
      * @param  array<string, mixed> $variables Mutation variables
      * @return array<string, mixed> Response data
@@ -144,4 +144,4 @@ class MondayClient
     {
         return $this->httpClient->mutate($mutation, $variables);
     }
-} 
+}

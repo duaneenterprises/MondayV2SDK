@@ -6,7 +6,7 @@ use DateTimeImmutable;
 
 /**
  * Response DTO for board data
- * 
+ *
  * Provides type-safe access to board response data
  * from Monday.com API.
  */
@@ -52,7 +52,7 @@ class BoardResponse
 
     /**
      * Get board ID
-     * 
+     *
      * @return string
      */
     public function getId(): string
@@ -62,7 +62,7 @@ class BoardResponse
 
     /**
      * Get board name
-     * 
+     *
      * @return string
      */
     public function getName(): string
@@ -72,7 +72,7 @@ class BoardResponse
 
     /**
      * Get board description
-     * 
+     *
      * @return string|null
      */
     public function getDescription(): ?string
@@ -82,7 +82,7 @@ class BoardResponse
 
     /**
      * Get board state
-     * 
+     *
      * @return string
      */
     public function getState(): string
@@ -92,7 +92,7 @@ class BoardResponse
 
     /**
      * Get creation date
-     * 
+     *
      * @return DateTimeImmutable
      */
     public function getCreatedAt(): DateTimeImmutable
@@ -102,7 +102,7 @@ class BoardResponse
 
     /**
      * Get update date
-     * 
+     *
      * @return DateTimeImmutable
      */
     public function getUpdatedAt(): DateTimeImmutable
@@ -112,7 +112,7 @@ class BoardResponse
 
     /**
      * Get board kind
-     * 
+     *
      * @return string
      */
     public function getBoardKind(): string
@@ -122,7 +122,7 @@ class BoardResponse
 
     /**
      * Get board folder ID
-     * 
+     *
      * @return string|null
      */
     public function getBoardFolderId(): ?string
@@ -132,7 +132,7 @@ class BoardResponse
 
     /**
      * Get permissions
-     * 
+     *
      * @return array
      */
     public function getPermissions(): array
@@ -142,7 +142,7 @@ class BoardResponse
 
     /**
      * Get owner
-     * 
+     *
      * @return array
      */
     public function getOwner(): array
@@ -152,7 +152,7 @@ class BoardResponse
 
     /**
      * Get columns
-     * 
+     *
      * @return array
      */
     public function getColumns(): array
@@ -162,7 +162,7 @@ class BoardResponse
 
     /**
      * Create from API response array
-     * 
+     *
      * @param  array<string, mixed> $data
      * @return self
      */
@@ -185,7 +185,7 @@ class BoardResponse
 
     /**
      * Convert to array for backward compatibility
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -207,7 +207,7 @@ class BoardResponse
 
     /**
      * Get column by ID
-     * 
+     *
      * @param  string $columnId
      * @return array<string, mixed>|null
      */
@@ -218,13 +218,13 @@ class BoardResponse
                 return $column;
             }
         }
-        
+
         return null;
     }
 
     /**
      * Check if board has a specific column
-     * 
+     *
      * @param  string $columnId
      * @return bool
      */
@@ -235,7 +235,7 @@ class BoardResponse
 
     /**
      * Get owner name
-     * 
+     *
      * @return string|null
      */
     public function getOwnerName(): ?string
@@ -245,11 +245,11 @@ class BoardResponse
 
     /**
      * Get owner ID
-     * 
+     *
      * @return string|null
      */
     public function getOwnerId(): ?string
     {
         return $this->owner['id'] ?? null;
     }
-} 
+}

@@ -4,7 +4,7 @@ namespace MondayV2SDK\Core\Configuration;
 
 /**
  * Main configuration class
- * 
+ *
  * Combines all configuration components into a single,
  * validated configuration object.
  */
@@ -26,7 +26,7 @@ class Configuration
 
     /**
      * Create from array configuration
-     * 
+     *
      * @param  array<string, mixed> $config
      * @return self
      */
@@ -41,7 +41,7 @@ class Configuration
 
     /**
      * Create from legacy configuration format
-     * 
+     *
      * @param  array<string, mixed> $config
      * @return self
      */
@@ -49,7 +49,7 @@ class Configuration
     {
         // Extract API token from root level for backward compatibility
         $apiToken = $config['api_token'] ?? '';
-        
+
         return new self(
             httpClient: new HttpClientConfig($apiToken),
             rateLimit: RateLimitConfig::fromArray($config),
@@ -59,7 +59,7 @@ class Configuration
 
     /**
      * Convert to array for backward compatibility
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -73,7 +73,7 @@ class Configuration
 
     /**
      * Get HTTP client configuration
-     * 
+     *
      * @return HttpClientConfig
      */
     public function getHttpClient(): HttpClientConfig
@@ -83,7 +83,7 @@ class Configuration
 
     /**
      * Get rate limit configuration
-     * 
+     *
      * @return RateLimitConfig
      */
     public function getRateLimit(): RateLimitConfig
@@ -93,7 +93,7 @@ class Configuration
 
     /**
      * Get logging configuration
-     * 
+     *
      * @return LoggingConfig
      */
     public function getLogging(): LoggingConfig
@@ -103,11 +103,11 @@ class Configuration
 
     /**
      * Get API token (convenience method)
-     * 
+     *
      * @return string
      */
     public function getApiToken(): string
     {
         return $this->httpClient->getApiToken();
     }
-} 
+}

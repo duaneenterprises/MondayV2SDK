@@ -4,7 +4,7 @@ namespace MondayV2SDK\Exceptions;
 
 /**
  * Exception thrown when rate limit is exceeded
- * 
+ *
  * This exception is thrown when the Monday.com API rate limit is exceeded
  * or when the SDK's internal rate limiter prevents a request.
  */
@@ -14,7 +14,7 @@ class RateLimitException extends \Exception
 
     /**
      * Constructor
-     * 
+     *
      * @param string      $message    Error message
      * @param int         $retryAfter Seconds to wait before retrying
      * @param ?\Throwable $previous   Previous exception
@@ -27,7 +27,7 @@ class RateLimitException extends \Exception
 
     /**
      * Get the number of seconds to wait before retrying
-     * 
+     *
      * @return int
      */
     public function getRetryAfter(): int
@@ -37,7 +37,7 @@ class RateLimitException extends \Exception
 
     /**
      * Get the retry after time as a DateTime
-     * 
+     *
      * @return \DateTime
      */
     public function getRetryAfterDateTime(): \DateTime
@@ -47,7 +47,7 @@ class RateLimitException extends \Exception
 
     /**
      * Check if enough time has passed to retry
-     * 
+     *
      * @param  \DateTime $lastAttempt When the last attempt was made
      * @return bool
      */
@@ -56,7 +56,7 @@ class RateLimitException extends \Exception
         $now = new \DateTime();
         $retryTime = clone $lastAttempt;
         $retryTime->add(new \DateInterval("PT{$this->retryAfter}S"));
-        
+
         return $now >= $retryTime;
     }
-} 
+}

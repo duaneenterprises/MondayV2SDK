@@ -9,7 +9,7 @@ interface HttpClientInterface
 {
     /**
      * Execute a GraphQL query
-     * 
+     *
      * @param  string               $query     GraphQL query
      * @param  array<string, mixed> $variables Query variables
      * @return array<string, mixed> Response data
@@ -18,10 +18,10 @@ interface HttpClientInterface
 
     /**
      * Execute a GraphQL mutation
-     * 
+     *
      * @param  string               $mutation  GraphQL mutation
      * @param  array<string, mixed> $variables Mutation variables
      * @return array<string, mixed> Response data
      */
     public function mutate(string $mutation, array $variables = []): array;
-} 
+}

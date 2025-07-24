@@ -21,7 +21,8 @@ class SimplifiedIntegrationTest extends TestCase
     protected function setUp(): void
     {
         $this->client = new MondayClient(
-            $this->testApiToken, [
+            $this->testApiToken,
+            [
             'timeout' => 30,
             'rate_limit' => [
                 'minute_limit' => 100,
@@ -44,7 +45,8 @@ class SimplifiedIntegrationTest extends TestCase
     {
         // Create mock response using helper
         $mockResponse = MockHelper::createSuccessfulGraphQLResponse(
-            'boards', [
+            'boards',
+            [
             MockHelper::createSampleBoardData()
             ]
         );
@@ -70,7 +72,7 @@ class SimplifiedIntegrationTest extends TestCase
     {
         // Create mock response for item creation
         $mockResponse = MockHelper::createSuccessfulGraphQLResponse(
-            'create_item', 
+            'create_item',
             MockHelper::createSampleItemData()
         );
 
@@ -198,7 +200,8 @@ class SimplifiedIntegrationTest extends TestCase
         // Test search functionality
         $itemsService = $this->client->items();
         $result = $itemsService->searchByColumnValues(
-            1234567890, [
+            1234567890,
+            [
             'status_01' => 'Working'
             ]
         );
@@ -207,4 +210,4 @@ class SimplifiedIntegrationTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertEquals('Test Item', $result[0]['name']);
     }
-} 
+}

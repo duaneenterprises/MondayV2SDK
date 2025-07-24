@@ -4,7 +4,7 @@ namespace MondayV2SDK\ColumnTypes;
 
 /**
  * Text column type for Monday.com
- * 
+ *
  * Handles text and long text columns. Supports both simple text values
  * and formatted text with markdown.
  */
@@ -14,7 +14,7 @@ class TextColumn extends AbstractColumnType
 
     /**
      * Constructor
-     * 
+     *
      * @param string $columnId The column ID
      * @param string $text     The text value
      */
@@ -25,7 +25,7 @@ class TextColumn extends AbstractColumnType
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     public function getType(): string
@@ -35,7 +35,7 @@ class TextColumn extends AbstractColumnType
 
     /**
      * Validate the text value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -51,7 +51,7 @@ class TextColumn extends AbstractColumnType
 
     /**
      * Get the column value for API
-     * 
+     *
      * @return string
      */
     public function getValue(): string
@@ -61,7 +61,7 @@ class TextColumn extends AbstractColumnType
 
     /**
      * Get the column value in Monday.com API format
-     * 
+     *
      * @return array<string, string>
      */
     public function getApiValue(): array
@@ -71,7 +71,7 @@ class TextColumn extends AbstractColumnType
 
     /**
      * Create a text column with markdown formatting
-     * 
+     *
      * @param  string $columnId The column ID
      * @param  string $text     The text value
      * @return self
@@ -83,7 +83,7 @@ class TextColumn extends AbstractColumnType
 
     /**
      * Create an empty text column
-     * 
+     *
      * @param  string $columnId The column ID
      * @return self
      */
@@ -91,4 +91,4 @@ class TextColumn extends AbstractColumnType
     {
         return new self($columnId, '');
     }
-} 
+}

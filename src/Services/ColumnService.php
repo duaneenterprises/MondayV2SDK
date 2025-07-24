@@ -9,7 +9,7 @@ use MondayV2SDK\Exceptions\MondayApiException;
 
 /**
  * Service for managing Monday.com columns
- * 
+ *
  * Provides methods for creating, updating, and querying columns
  * on Monday.com boards.
  */
@@ -21,8 +21,8 @@ class ColumnService
 
     /**
      * Constructor
-     * 
-     * @param HttpClient  $httpClient
+     *
+     * @param HttpClientInterface  $httpClient
      * @param RateLimiter $rateLimiter
      * @param Logger      $logger
      */
@@ -35,7 +35,7 @@ class ColumnService
 
     /**
      * Create a new column
-     * 
+     *
      * @param  int                  $boardId Board ID
      * @param  array<string, mixed> $data    Column data
      * @return array<string, mixed> Created column data
@@ -75,7 +75,8 @@ class ColumnService
         ];
 
         $this->logger->info(
-            'Creating column', [
+            'Creating column',
+            [
             'board_id' => $boardId,
             'title' => $title,
             'column_type' => $columnType
@@ -88,7 +89,7 @@ class ColumnService
 
     /**
      * Update a column
-     * 
+     *
      * @param  string               $columnId Column ID
      * @param  array<string, mixed> $data     Update data
      * @return array<string, mixed> Updated column data
@@ -133,7 +134,8 @@ class ColumnService
         ];
 
         $this->logger->info(
-            'Updating column', [
+            'Updating column',
+            [
             'column_id' => $columnId,
             'fields' => array_keys(array_filter($data))
             ]
@@ -145,7 +147,7 @@ class ColumnService
 
     /**
      * Delete a column
-     * 
+     *
      * @param  string $columnId Column ID
      * @return array<string, mixed> Deletion result
      * @throws MondayApiException
@@ -172,7 +174,7 @@ class ColumnService
 
     /**
      * Archive a column
-     * 
+     *
      * @param  string $columnId Column ID
      * @return array<string, mixed> Archive result
      * @throws MondayApiException
@@ -200,7 +202,7 @@ class ColumnService
 
     /**
      * Get column metadata
-     * 
+     *
      * @param  string $columnId Column ID
      * @return array<string, mixed> Column metadata
      * @throws MondayApiException
@@ -232,7 +234,7 @@ class ColumnService
 
     /**
      * Get available column types
-     * 
+     *
      * @return array<string, string> Column types
      */
     public function getAvailableTypes(): array
@@ -270,4 +272,4 @@ class ColumnService
             'tags' => 'Tags'
         ];
     }
-} 
+}

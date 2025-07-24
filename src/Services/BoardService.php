@@ -10,7 +10,7 @@ use MondayV2SDK\Exceptions\MondayApiException;
 
 /**
  * Service for managing Monday.com boards
- * 
+ *
  * Provides methods for creating, updating, deleting, and querying boards
  * and their metadata.
  */
@@ -22,8 +22,8 @@ class BoardService
 
     /**
      * Constructor
-     * 
-     * @param HttpClient  $httpClient
+     *
+     * @param HttpClientInterface  $httpClient
      * @param RateLimiter $rateLimiter
      * @param Logger      $logger
      */
@@ -36,7 +36,7 @@ class BoardService
 
     /**
      * Get all boards
-     * 
+     *
      * @param  array<string, mixed> $options Query options
      * @return array<int, array<string, mixed>> Boards data
      * @throws MondayApiException
@@ -79,7 +79,7 @@ class BoardService
 
     /**
      * Get a board by ID
-     * 
+     *
      * @param  int $boardId Board ID
      * @return array<string, mixed> Board data
      * @throws MondayApiException
@@ -127,7 +127,7 @@ class BoardService
 
     /**
      * Create a new board
-     * 
+     *
      * @param  array<string, mixed> $data Board data
      * @return array<string, mixed> Created board data
      * @throws MondayApiException
@@ -172,7 +172,8 @@ class BoardService
         ];
 
         $this->logger->info(
-            'Creating board', [
+            'Creating board',
+            [
             'board_name' => $boardName,
             'board_kind' => $boardKind
             ]
@@ -184,7 +185,7 @@ class BoardService
 
     /**
      * Update a board
-     * 
+     *
      * @param  int                  $boardId Board ID
      * @param  array<string, mixed> $data    Update data
      * @return array<string, mixed> Updated board data
@@ -232,7 +233,8 @@ class BoardService
         ];
 
         $this->logger->info(
-            'Updating board', [
+            'Updating board',
+            [
             'board_id' => $boardId,
             'fields' => array_keys(array_filter($data))
             ]
@@ -244,7 +246,7 @@ class BoardService
 
     /**
      * Delete a board
-     * 
+     *
      * @param  int $boardId Board ID
      * @return array<string, mixed> Deletion result
      * @throws MondayApiException
@@ -274,7 +276,7 @@ class BoardService
 
     /**
      * Get board columns
-     * 
+     *
      * @param  int $boardId Board ID
      * @return array<int, array<string, mixed>> Columns data
      * @throws MondayApiException
@@ -310,7 +312,7 @@ class BoardService
 
     /**
      * Get board subscribers
-     * 
+     *
      * @param  int $boardId Board ID
      * @return array<int, array<string, mixed>> Subscribers data
      * @throws MondayApiException
@@ -341,4 +343,4 @@ class BoardService
         $response = $this->httpClient->query($query, $variables);
         return $response['boards'][0]['subscribers'] ?? [];
     }
-} 
+}

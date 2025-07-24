@@ -19,6 +19,8 @@ class GuzzleClientAdapter implements GuzzleClientInterface
 
     public function post(string $uri, array $options = []): Response
     {
-        return $this->client->post($uri, $options);
+        /** @var Response $response */
+        $response = $this->client->post($uri, $options);
+        return $response;
     }
-} 
+}

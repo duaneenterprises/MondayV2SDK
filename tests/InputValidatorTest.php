@@ -11,13 +11,13 @@ class InputValidatorTest extends TestCase
     {
         // Valid integer
         $this->assertEquals(123, InputValidator::validateBoardId(123));
-        
+
         // Valid string
         $this->assertEquals(456, InputValidator::validateBoardId('456'));
-        
+
         // Valid string with whitespace
         $this->assertEquals(789, InputValidator::validateBoardId(' 789 '));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateBoardId(0);
@@ -39,13 +39,13 @@ class InputValidatorTest extends TestCase
     {
         // Valid integer
         $this->assertEquals(123, InputValidator::validateItemId(123));
-        
+
         // Valid string
         $this->assertEquals(456, InputValidator::validateItemId('456'));
-        
+
         // Valid string with whitespace
         $this->assertEquals(789, InputValidator::validateItemId(' 789 '));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateItemId(0);
@@ -61,10 +61,10 @@ class InputValidatorTest extends TestCase
     {
         // Valid name
         $this->assertEquals('Test Item', InputValidator::validateItemName('Test Item'));
-        
+
         // Valid name with whitespace
         $this->assertEquals('Test Item', InputValidator::validateItemName('  Test Item  '));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateItemName('');
@@ -93,10 +93,10 @@ class InputValidatorTest extends TestCase
     {
         // Valid name
         $this->assertEquals('Test Board', InputValidator::validateBoardName('Test Board'));
-        
+
         // Valid name with whitespace
         $this->assertEquals('Test Board', InputValidator::validateBoardName('  Test Board  '));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateBoardName('');
@@ -106,13 +106,13 @@ class InputValidatorTest extends TestCase
     {
         // Valid description
         $this->assertEquals('Test Description', InputValidator::validateBoardDescription('Test Description'));
-        
+
         // Valid description with whitespace
         $this->assertEquals('Test Description', InputValidator::validateBoardDescription('  Test Description  '));
-        
+
         // Null is valid
         $this->assertNull(InputValidator::validateBoardDescription(null));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateBoardDescription(123);
@@ -132,10 +132,10 @@ class InputValidatorTest extends TestCase
             'text_column' => 'Test Value',
             'status_column' => 'Working'
         ];
-        
+
         $result = InputValidator::validateColumnValues($columnValues);
         $this->assertEquals($columnValues, $result);
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateColumnValues('not an array');
@@ -146,7 +146,7 @@ class InputValidatorTest extends TestCase
         $columnValues = [
             123 => 'Test Value' // Invalid key type
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateColumnValues($columnValues);
     }
@@ -156,7 +156,7 @@ class InputValidatorTest extends TestCase
         $columnValues = [
             'invalid-key' => 'Test Value' // Invalid key format
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateColumnValues($columnValues);
     }
@@ -166,10 +166,10 @@ class InputValidatorTest extends TestCase
         // Valid cursor
         $cursor = 'eyJib2FyZF9pZCI6MTIzNDU2Nzg5LCJpdGVtX2lkIjoxMjM0NTY3ODl9';
         $this->assertEquals($cursor, InputValidator::validateCursor($cursor));
-        
+
         // Valid cursor with whitespace
         $this->assertEquals($cursor, InputValidator::validateCursor('  ' . $cursor . '  '));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateCursor('');
@@ -187,7 +187,7 @@ class InputValidatorTest extends TestCase
         $this->assertEquals(50, InputValidator::validateLimit(50));
         $this->assertEquals(100, InputValidator::validateLimit('100'));
         $this->assertEquals(500, InputValidator::validateLimit(' 500 '));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateLimit(0);
@@ -207,10 +207,10 @@ class InputValidatorTest extends TestCase
             'cursor' => 'test',
             'include_subscribers' => true
         ];
-        
+
         $result = InputValidator::validateOptions($options);
         $this->assertEquals($options, $result);
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateOptions('not an array');
@@ -221,7 +221,7 @@ class InputValidatorTest extends TestCase
         $options = [
             123 => 'value' // Invalid key type
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateOptions($options);
     }
@@ -231,7 +231,7 @@ class InputValidatorTest extends TestCase
         // Valid emails
         $this->assertEquals('test@example.com', InputValidator::validateEmail('test@example.com'));
         $this->assertEquals('user.name@domain.co.uk', InputValidator::validateEmail('  user.name@domain.co.uk  '));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateEmail('');
@@ -256,7 +256,7 @@ class InputValidatorTest extends TestCase
         $this->assertEquals('+1-555-123-4567', InputValidator::validatePhone('+1-555-123-4567'));
         $this->assertEquals('5551234567', InputValidator::validatePhone('  5551234567  '));
         $this->assertEquals('(555) 123-4567', InputValidator::validatePhone('(555) 123-4567'));
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validatePhone('');
@@ -281,7 +281,7 @@ class InputValidatorTest extends TestCase
         $location = '123 Main St, New York, NY';
         $result = InputValidator::validateLocation($location);
         $this->assertEquals(['address' => $location], $result);
-        
+
         // Valid array location
         $locationArray = [
             'address' => '123 Main St',
@@ -292,10 +292,10 @@ class InputValidatorTest extends TestCase
             'lng' => -74.0060,
             'country_code' => 'US'
         ];
-        
+
         $result = InputValidator::validateLocation($locationArray);
         $this->assertEquals($locationArray, $result);
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateLocation(123);
@@ -308,7 +308,7 @@ class InputValidatorTest extends TestCase
             'lat' => 91, // Invalid latitude
             'lng' => 0
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateLocation($location);
     }
@@ -319,7 +319,7 @@ class InputValidatorTest extends TestCase
             'address' => 'Test',
             'country_code' => 'USA' // Invalid format
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateLocation($location);
     }
@@ -330,16 +330,16 @@ class InputValidatorTest extends TestCase
         $status = 'Working';
         $result = InputValidator::validateStatus($status);
         $this->assertEquals(['labels' => [$status]], $result);
-        
+
         // Valid array status
         $statusArray = [
             'labels' => ['Working', 'In Progress'],
             'color' => 'blue'
         ];
-        
+
         $result = InputValidator::validateStatus($statusArray);
         $this->assertEquals($statusArray, $result);
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateStatus(123);
@@ -351,7 +351,7 @@ class InputValidatorTest extends TestCase
             'labels' => ['Working'],
             'color' => 'invalid-color'
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateStatus($status);
     }
@@ -362,16 +362,16 @@ class InputValidatorTest extends TestCase
         $timeline = '2024-01-01';
         $result = InputValidator::validateTimeline($timeline);
         $this->assertEquals(['date' => $timeline], $result);
-        
+
         // Valid array timeline
         $timelineArray = [
             'date' => '2024-01-01',
             'end_date' => '2024-01-31'
         ];
-        
+
         $result = InputValidator::validateTimeline($timelineArray);
         $this->assertEquals($timelineArray, $result);
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateTimeline(123);
@@ -387,16 +387,16 @@ class InputValidatorTest extends TestCase
     {
         // Valid numeric
         $this->assertEquals(['number' => 123.45], InputValidator::validateNumber(123.45));
-        
+
         // Valid array number
         $numberArray = [
             'number' => 123.45,
             'format' => 'currency'
         ];
-        
+
         $result = InputValidator::validateNumber($numberArray);
         $this->assertEquals($numberArray, $result);
-        
+
         // Invalid cases
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateNumber('not a number');
@@ -408,7 +408,7 @@ class InputValidatorTest extends TestCase
             'number' => 123.45,
             'format' => 'invalid-format'
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateNumber($number);
     }
@@ -419,7 +419,7 @@ class InputValidatorTest extends TestCase
             'number' => 'not numeric',
             'format' => 'currency'
         ];
-        
+
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateNumber($number);
     }
@@ -467,4 +467,4 @@ class InputValidatorTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         InputValidator::validateNumber([]);
     }
-} 
+}

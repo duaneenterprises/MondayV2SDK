@@ -4,7 +4,7 @@ namespace MondayV2SDK\ColumnTypes;
 
 /**
  * Number column type for Monday.com
- * 
+ *
  * Handles number columns with validation and formatting.
  */
 class NumberColumn extends AbstractColumnType
@@ -14,7 +14,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Constructor
-     * 
+     *
      * @param string      $columnId The column ID
      * @param float|int   $number   The number value
      * @param string|null $format   The number format (optional)
@@ -23,13 +23,13 @@ class NumberColumn extends AbstractColumnType
     {
         $this->number = (float) $number;
         $this->format = $format;
-        
+
         parent::__construct($columnId, $this->number);
     }
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     public function getType(): string
@@ -39,7 +39,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Validate the number value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -53,7 +53,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Get the number value
-     * 
+     *
      * @return float
      */
     public function getValue(): float
@@ -63,23 +63,23 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Get the column value in Monday.com API format
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getApiValue(): array
     {
         $value = ['number' => $this->number];
-        
+
         if ($this->format) {
             $value['format'] = $this->format;
         }
-        
+
         return $value;
     }
 
     /**
      * Create a number column with formatting
-     * 
+     *
      * @param  string    $columnId The column ID
      * @param  float|int $number   The number value
      * @param  string    $format   The number format
@@ -92,7 +92,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Create a number column for currency
-     * 
+     *
      * @param  string    $columnId The column ID
      * @param  float|int $amount   The amount
      * @param  string    $currency The currency code (e.g., 'USD', 'EUR')
@@ -105,7 +105,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Create a number column for percentage
-     * 
+     *
      * @param  string    $columnId   The column ID
      * @param  float|int $percentage The percentage value
      * @return self
@@ -117,7 +117,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Create a number column for time duration
-     * 
+     *
      * @param  string    $columnId The column ID
      * @param  float|int $duration The duration in minutes
      * @return self
@@ -129,7 +129,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Create an empty number column
-     * 
+     *
      * @param  string $columnId The column ID
      * @return self
      */
@@ -140,7 +140,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Get the number value
-     * 
+     *
      * @return float
      */
     public function getNumber(): float
@@ -150,7 +150,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Get the number format
-     * 
+     *
      * @return string|null
      */
     public function getFormat(): ?string
@@ -160,7 +160,7 @@ class NumberColumn extends AbstractColumnType
 
     /**
      * Validate number format
-     * 
+     *
      * @param  string $format
      * @return bool
      */
@@ -311,4 +311,4 @@ class NumberColumn extends AbstractColumnType
 
         return in_array($format, $validFormats);
     }
-} 
+}

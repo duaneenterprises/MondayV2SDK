@@ -35,7 +35,7 @@ class RateLimiterTest extends TestCase
     {
         $rateLimiter = new RateLimiter();
         $stats = $rateLimiter->getUsageStats();
-        
+
         $this->assertEquals(100, $stats['minute_limit']);
         $this->assertEquals(1000, $stats['daily_limit']);
         $this->assertEquals(300, $rateLimiter->getCleanupConfig()['cleanup_interval']);
@@ -52,10 +52,10 @@ class RateLimiterTest extends TestCase
             'max_array_size' => 5000,
             ]
         );
-        
+
         $stats = $rateLimiter->getUsageStats();
         $config = $rateLimiter->getCleanupConfig();
-        
+
         $this->assertEquals(50, $stats['minute_limit']);
         $this->assertEquals(500, $stats['daily_limit']);
         $this->assertEquals(120, $config['cleanup_interval']);
@@ -68,7 +68,7 @@ class RateLimiterTest extends TestCase
         for ($i = 0; $i < 5; $i++) {
             $this->rateLimiter->checkLimit();
         }
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(5, $stats['minute_requests']);
         $this->assertEquals(5, $stats['daily_requests']);
@@ -82,7 +82,7 @@ class RateLimiterTest extends TestCase
         for ($i = 0; $i < 5; $i++) {
             $this->rateLimiter->checkLimit();
         }
-        
+
         // 6th request should trigger rate limiting
         $this->expectException(RateLimitException::class);
         $this->rateLimiter->checkLimit();
@@ -98,12 +98,12 @@ class RateLimiterTest extends TestCase
             'logging' => ['enabled' => false]
             ]
         );
-        
+
         // Make 10 requests (at the daily limit)
         for ($i = 0; $i < 10; $i++) {
             $rateLimiter->checkLimit();
         }
-        
+
         // 11th request should trigger daily rate limiting
         $this->expectException(RateLimitException::class);
         $rateLimiter->checkLimit();
@@ -115,13 +115,13 @@ class RateLimiterTest extends TestCase
         $reflection = new \ReflectionClass($this->rateLimiter);
         $requestTimesProperty = $reflection->getProperty('requestTimes');
         $requestTimesProperty->setAccessible(true);
-        
+
         $oldTime = time() - 120; // 2 minutes ago
         $requestTimesProperty->setValue($this->rateLimiter, [$oldTime, $oldTime + 1, $oldTime + 2]);
-        
+
         // Trigger cleanup
         $this->rateLimiter->checkLimit();
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(1, $stats['minute_requests']); // Only the new request should remain
     }
@@ -132,18 +132,19 @@ class RateLimiterTest extends TestCase
         $reflection = new \ReflectionClass($this->rateLimiter);
         $dailyRequestsProperty = $reflection->getProperty('dailyRequests');
         $dailyRequestsProperty->setAccessible(true);
-        
+
         $oldDate = date('Y-m-d', strtotime('-10 days'));
         $dailyRequestsProperty->setValue(
-            $this->rateLimiter, [
+            $this->rateLimiter,
+            [
             $oldDate => 50,
             date('Y-m-d') => 5
             ]
         );
-        
+
         // Trigger cleanup
         $this->rateLimiter->checkLimit();
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(6, $stats['daily_requests']); // Only current day should remain
     }
@@ -155,15 +156,15 @@ class RateLimiterTest extends TestCase
         $lastCleanupProperty = $reflection->getProperty('lastCleanupTime');
         $lastCleanupProperty->setAccessible(true);
         $lastCleanupProperty->setValue($this->rateLimiter, time() - 120); // 2 minutes ago
-        
+
         // Add some old data
         $requestTimesProperty = $reflection->getProperty('requestTimes');
         $requestTimesProperty->setAccessible(true);
         $requestTimesProperty->setValue($this->rateLimiter, [time() - 120, time() - 90, time() - 70]);
-        
+
         // Trigger periodic cleanup
         $this->rateLimiter->forceCleanup();
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(0, $stats['minute_requests']); // All old requests should be cleaned up
         $this->assertGreaterThan(0, $stats['cleanup_stats']['total_cleanups']);
@@ -179,19 +180,19 @@ class RateLimiterTest extends TestCase
             'logging' => ['enabled' => false]
             ]
         );
-        
+
         // Simulate large arrays
         $reflection = new \ReflectionClass($rateLimiter);
         $requestTimesProperty = $reflection->getProperty('requestTimes');
         $requestTimesProperty->setAccessible(true);
-        
+
         // Fill with more than max size
         $largeArray = range(time() - 100, time(), 1);
         $requestTimesProperty->setValue($rateLimiter, $largeArray);
-        
+
         // Trigger emergency cleanup
         $rateLimiter->forceCleanup();
-        
+
         $stats = $rateLimiter->getUsageStats();
         $this->assertLessThanOrEqual(10, $stats['memory_stats']['request_times_size']); // Should be limited to minute_limit
     }
@@ -202,10 +203,10 @@ class RateLimiterTest extends TestCase
         for ($i = 0; $i < 3; $i++) {
             $this->rateLimiter->forceCleanup();
         }
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $cleanupStats = $stats['cleanup_stats'];
-        
+
         $this->assertEquals(3, $cleanupStats['total_cleanups']);
         $this->assertGreaterThanOrEqual(0, $cleanupStats['avg_cleanup_time_ms']);
         $this->assertNotEmpty($cleanupStats['last_cleanup']);
@@ -219,10 +220,10 @@ class RateLimiterTest extends TestCase
         $requestTimesProperty = $reflection->getProperty('requestTimes');
         $requestTimesProperty->setAccessible(true);
         $requestTimesProperty->setValue($this->rateLimiter, [time() - 120, time() - 90, time() - 30]);
-        
+
         // Force cleanup
         $this->rateLimiter->forceCleanup();
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(1, $stats['minute_requests']); // Only recent request should remain
         $this->assertEquals(1, $stats['cleanup_stats']['total_cleanups']);
@@ -231,7 +232,7 @@ class RateLimiterTest extends TestCase
     public function testGetCleanupConfig(): void
     {
         $config = $this->rateLimiter->getCleanupConfig();
-        
+
         $this->assertEquals(60, $config['cleanup_interval']);
         $this->assertEquals(100, $config['max_array_size']);
         $this->assertEquals(0, $config['last_cleanup_time']);
@@ -243,13 +244,13 @@ class RateLimiterTest extends TestCase
         // Add some data
         $this->rateLimiter->checkLimit();
         $this->rateLimiter->forceCleanup();
-        
+
         // Reset
         $this->rateLimiter->reset();
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $config = $this->rateLimiter->getCleanupConfig();
-        
+
         $this->assertEquals(0, $stats['minute_requests']);
         $this->assertEquals(0, $stats['daily_requests']);
         $this->assertEquals(0, $config['total_cleanups']);
@@ -262,10 +263,10 @@ class RateLimiterTest extends TestCase
         for ($i = 0; $i < 3; $i++) {
             $this->rateLimiter->checkLimit();
         }
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $memoryStats = $stats['memory_stats'];
-        
+
         $this->assertEquals(3, $memoryStats['request_times_size']);
         $this->assertEquals(1, $memoryStats['daily_requests_size']); // Only current day
         $this->assertEquals(100, $memoryStats['max_array_size']);
@@ -275,19 +276,19 @@ class RateLimiterTest extends TestCase
     {
         // Simulate rapid requests
         $startTime = microtime(true);
-        
+
         for ($i = 0; $i < 5; $i++) {
             $this->rateLimiter->checkLimit();
             usleep(1000); // 1ms delay
         }
-        
+
         $endTime = microtime(true);
         $duration = ($endTime - $startTime) * 1000; // Convert to milliseconds
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(5, $stats['minute_requests']);
         $this->assertEquals(5, $stats['daily_requests']);
-        
+
         // Should complete quickly (no rate limiting delays)
         $this->assertLessThan(100, $duration); // Should take less than 100ms
     }
@@ -298,24 +299,24 @@ class RateLimiterTest extends TestCase
         for ($i = 0; $i < 5; $i++) {
             $this->rateLimiter->checkLimit();
         }
-        
+
         // Should be at limit
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(0, $stats['minute_remaining']);
-        
+
         // Wait for recovery (simulate time passing)
         $reflection = new \ReflectionClass($this->rateLimiter);
         $requestTimesProperty = $reflection->getProperty('requestTimes');
         $requestTimesProperty->setAccessible(true);
-        
+
         // Replace with old timestamps (more than 1 minute ago)
         $oldTimes = array_fill(0, 5, time() - 70);
         $requestTimesProperty->setValue($this->rateLimiter, $oldTimes);
-        
+
         // Should be able to make requests again
         $this->rateLimiter->checkLimit();
-        
+
         $stats = $this->rateLimiter->getUsageStats();
         $this->assertEquals(1, $stats['minute_requests']); // Only the new request
     }
-} 
+}

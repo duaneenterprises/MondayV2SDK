@@ -6,7 +6,7 @@ use MondayV2SDK\Core\InputValidator;
 
 /**
  * Location column type for Monday.com
- * 
+ *
  * Handles location columns with address, city, state, country, and coordinates.
  * Supports both full address objects and simple string addresses.
  */
@@ -22,7 +22,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Constructor
-     * 
+     *
      * @param string $columnId       The column ID
      * @param mixed  $location       Location data or address string
      * @param bool   $skipValidation Whether to skip validation
@@ -52,7 +52,7 @@ class LocationColumn extends AbstractColumnType
             }
         } else {
             $validatedLocation = InputValidator::validateLocation($location);
-            
+
             $this->address = $validatedLocation['address'] ?? null;
             $this->city = $validatedLocation['city'] ?? null;
             $this->state = $validatedLocation['state'] ?? null;
@@ -67,7 +67,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     public function getType(): string
@@ -77,7 +77,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Validate the location value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -106,47 +106,47 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the column value for API
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getValue(): array
     {
         $value = [];
-        
+
         if ($this->address) {
             $value['address'] = $this->address;
         }
-        
+
         if ($this->city) {
             $value['city'] = $this->city;
         }
-        
+
         if ($this->state) {
             $value['state'] = $this->state;
         }
-        
+
         if ($this->country) {
             $value['country'] = $this->country;
         }
-        
+
         if ($this->lat !== null) {
             $value['lat'] = $this->lat;
         }
-        
+
         if ($this->lng !== null) {
             $value['lng'] = $this->lng;
         }
-        
+
         if ($this->countryCode) {
             $value['country_code'] = $this->countryCode;
         }
-        
+
         return $value;
     }
 
     /**
      * Create a location column with full address details
-     * 
+     *
      * @param  string      $columnId    The column ID
      * @param  string      $address     The street address
      * @param  string      $city        The city
@@ -168,7 +168,8 @@ class LocationColumn extends AbstractColumnType
         ?string $countryCode = null
     ): self {
         return new self(
-            $columnId, [
+            $columnId,
+            [
             'address' => $address,
             'city' => $city,
             'state' => $state,
@@ -182,7 +183,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Create a location column with coordinates
-     * 
+     *
      * @param  string      $columnId       The column ID
      * @param  float       $lat            Latitude
      * @param  float       $lng            Longitude
@@ -196,17 +197,17 @@ class LocationColumn extends AbstractColumnType
             'lat' => $lat,
             'lng' => $lng
         ];
-        
+
         if ($address) {
             $location['address'] = $address;
         }
-        
+
         return new self($columnId, $location, $skipValidation);
     }
 
     /**
      * Create a location column with city and state
-     * 
+     *
      * @param  string      $columnId The column ID
      * @param  string      $city     The city
      * @param  string      $state    The state/province
@@ -219,17 +220,17 @@ class LocationColumn extends AbstractColumnType
             'city' => $city,
             'state' => $state
         ];
-        
+
         if ($country) {
             $location['country'] = $country;
         }
-        
+
         return new self($columnId, $location);
     }
 
     /**
      * Create a location column with just an address string
-     * 
+     *
      * @param  string $columnId The column ID
      * @param  string $address  The address string
      * @return self
@@ -241,7 +242,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Create an empty location column
-     * 
+     *
      * @param  string $columnId The column ID
      * @return self
      */
@@ -252,7 +253,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the address
-     * 
+     *
      * @return string|null
      */
     public function getAddress(): ?string
@@ -262,7 +263,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the city
-     * 
+     *
      * @return string|null
      */
     public function getCity(): ?string
@@ -272,7 +273,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the state
-     * 
+     *
      * @return string|null
      */
     public function getState(): ?string
@@ -282,7 +283,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the country
-     * 
+     *
      * @return string|null
      */
     public function getCountry(): ?string
@@ -292,7 +293,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the latitude
-     * 
+     *
      * @return float|null
      */
     public function getLatitude(): ?float
@@ -302,7 +303,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the longitude
-     * 
+     *
      * @return float|null
      */
     public function getLongitude(): ?float
@@ -312,7 +313,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get the country code
-     * 
+     *
      * @return string|null
      */
     public function getCountryCode(): ?string
@@ -322,75 +323,75 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Get formatted address string
-     * 
+     *
      * @return string
      */
     public function getFormattedAddress(): string
     {
         $parts = [];
-        
+
         if ($this->address) {
             $parts[] = $this->address;
         }
-        
+
         if ($this->city) {
             $parts[] = $this->city;
         }
-        
+
         if ($this->state) {
             $parts[] = $this->state;
         }
-        
+
         if ($this->country) {
             $parts[] = $this->country;
         }
-        
+
         return implode(', ', $parts);
     }
 
     /**
      * Build the value array for the parent constructor
-     * 
+     *
      * @return array<string, mixed>
      */
     private function buildValue(): array
     {
         $value = [];
-        
+
         if ($this->address) {
             $value['address'] = $this->address;
         }
-        
+
         if ($this->city) {
             $value['city'] = $this->city;
         }
-        
+
         if ($this->state) {
             $value['state'] = $this->state;
         }
-        
+
         if ($this->country) {
             $value['country'] = $this->country;
         }
-        
+
         if ($this->lat !== null) {
             $value['lat'] = $this->lat;
         }
-        
+
         if ($this->lng !== null) {
             $value['lng'] = $this->lng;
         }
-        
+
         if ($this->countryCode) {
             $value['country_code'] = $this->countryCode;
         }
-        
+
         return $value;
     }
 
     /**
      * Validate latitude
-     * 
+     *
      * @param  float $lat
      * @return bool
      */
@@ -401,7 +402,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Validate longitude
-     * 
+     *
      * @param  float $lng
      * @return bool
      */
@@ -412,7 +413,7 @@ class LocationColumn extends AbstractColumnType
 
     /**
      * Validate country code (ISO 3166-1 alpha-2)
-     * 
+     *
      * @param  string $countryCode
      * @return bool
      */
@@ -420,4 +421,4 @@ class LocationColumn extends AbstractColumnType
     {
         return preg_match('/^[A-Z]{2}$/', $countryCode) === 1;
     }
-} 
+}

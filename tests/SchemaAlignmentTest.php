@@ -16,7 +16,7 @@ use Mockery;
 
 /**
  * Test class to verify schema alignment with official Monday.com GraphQL schema
- * 
+ *
  * These tests ensure that the SDK uses the correct types and formats
  * as defined in the official schema at https://api.monday.com/v2/get_schema
  */
@@ -27,7 +27,8 @@ class SchemaAlignmentTest extends TestCase
     protected function setUp(): void
     {
         $this->client = new MondayClient(
-            'test-api-token', [
+            'test-api-token',
+            [
             'timeout' => 30,
             'rate_limit' => [
                 'minute_limit' => 100,
@@ -52,12 +53,12 @@ class SchemaAlignmentTest extends TestCase
     private function injectMockedHttpClient($mockHttpClient): void
     {
         $reflection = new \ReflectionClass($this->client);
-        
+
         // Inject into main client
         $httpClientProperty = $reflection->getProperty('httpClient');
         $httpClientProperty->setAccessible(true);
         $httpClientProperty->setValue($this->client, $mockHttpClient);
-        
+
         // Inject into all services
         $services = ['boardService', 'itemService', 'columnService', 'userService', 'workspaceService'];
         foreach ($services as $serviceName) {
@@ -65,7 +66,7 @@ class SchemaAlignmentTest extends TestCase
                 $serviceProperty = $reflection->getProperty($serviceName);
                 $serviceProperty->setAccessible(true);
                 $service = $serviceProperty->getValue($this->client);
-                
+
                 if ($service) {
                     $serviceReflection = new \ReflectionClass($service);
                     $serviceHttpClientProperty = $serviceReflection->getProperty('httpClient');
@@ -197,7 +198,7 @@ class SchemaAlignmentTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         // Mock successful responses
         $mockResponse = [
             'data' => [
@@ -217,12 +218,12 @@ class SchemaAlignmentTest extends TestCase
             ->andReturn($mockResponse);
 
         $this->injectMockedHttpClient($mockHttpClient);
-        
+
         // These should work without type errors
         $result1 = $this->client->items()->getAll(1234567890); // int should be cast to ID
         $result2 = $this->client->items()->get(1234567890); // int should be cast to ID
         $result3 = $this->client->boards()->get(1234567890); // int should be cast to ID
-        
+
         // Assert that the methods return expected results
         $this->assertIsArray($result1);
         $this->assertIsArray($result2);
@@ -266,7 +267,7 @@ class SchemaAlignmentTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         // Mock successful response
         $mockResponse = [
             'data' => [
@@ -278,14 +279,15 @@ class SchemaAlignmentTest extends TestCase
             ->andReturn($mockResponse);
 
         $this->injectMockedHttpClient($mockHttpClient);
-        
+
         // This should work without type errors
         $result = $this->client->items()->searchByColumnValues(
-            1234567890, [
+            1234567890,
+            [
             'status_01' => 'Working'
             ]
         );
-        
+
         // Assert that the search method returns expected results
         $this->assertIsArray($result);
     }
@@ -297,7 +299,7 @@ class SchemaAlignmentTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         // Mock successful responses
         $mockResponse = [
             'data' => [
@@ -317,11 +319,11 @@ class SchemaAlignmentTest extends TestCase
             ->andReturn($mockResponse);
 
         $this->injectMockedHttpClient($mockHttpClient);
-        
+
         // These should work without type errors
         $result1 = $this->client->items()->getAll(1234567890, ['limit' => 100]);
         $result2 = $this->client->items()->getNextPage('eyJib2FyZF9pZCI6MTIzNDU2Nzg5LCJpdGVtX2lkIjoxMjM0NTY3ODl9');
-        
+
         // Assert that the pagination methods return expected results
         $this->assertIsArray($result1);
         $this->assertIsArray($result2);
@@ -334,7 +336,7 @@ class SchemaAlignmentTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         // Mock successful response
         $mockResponse = [
             'data' => [
@@ -349,7 +351,7 @@ class SchemaAlignmentTest extends TestCase
             ->andReturn($mockResponse);
 
         $this->injectMockedHttpClient($mockHttpClient);
-        
+
         // This should work without type errors
         $result = $this->client->items()->create(
             [
@@ -360,8 +362,8 @@ class SchemaAlignmentTest extends TestCase
             ]
             ]
         );
-        
+
         // Assert that the mutation method returns expected results
         $this->assertIsArray($result);
     }
-} 
+}

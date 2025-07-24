@@ -12,7 +12,7 @@ use MondayV2SDK\Services\ColumnService;
 
 /**
  * Service factory for creating and managing SDK services
- * 
+ *
  * Provides centralized service creation with proper dependency injection
  * and configuration management.
  */
@@ -31,7 +31,7 @@ class ServiceFactory
 
     /**
      * Create service factory from array configuration
-     * 
+     *
      * @param  array<string, mixed> $config
      * @return self
      */
@@ -43,7 +43,7 @@ class ServiceFactory
 
     /**
      * Create service factory from configuration object
-     * 
+     *
      * @param  Configuration $configuration
      * @return self
      */
@@ -73,7 +73,7 @@ class ServiceFactory
 
     /**
      * Get HTTP client
-     * 
+     *
      * @return HttpClient
      */
     public function getHttpClient(): HttpClient
@@ -83,7 +83,7 @@ class ServiceFactory
 
     /**
      * Get rate limiter
-     * 
+     *
      * @return RateLimiter
      */
     public function getRateLimiter(): RateLimiter
@@ -93,7 +93,7 @@ class ServiceFactory
 
     /**
      * Get logger
-     * 
+     *
      * @return Logger
      */
     public function getLogger(): Logger
@@ -103,7 +103,7 @@ class ServiceFactory
 
     /**
      * Get configuration
-     * 
+     *
      * @return Configuration
      */
     public function getConfiguration(): Configuration
@@ -113,7 +113,7 @@ class ServiceFactory
 
     /**
      * Create item service
-     * 
+     *
      * @return ItemService
      */
     public function createItemService(): ItemService
@@ -127,7 +127,7 @@ class ServiceFactory
 
     /**
      * Create board service
-     * 
+     *
      * @return BoardService
      */
     public function createBoardService(): BoardService
@@ -141,7 +141,7 @@ class ServiceFactory
 
     /**
      * Create column service
-     * 
+     *
      * @return ColumnService
      */
     public function createColumnService(): ColumnService
@@ -155,7 +155,7 @@ class ServiceFactory
 
     /**
      * Create all services
-     * 
+     *
      * @return array<string, object>
      */
     public function createAllServices(): array
@@ -177,7 +177,7 @@ class ServiceFactory
 
     /**
      * Get service by name
-     * 
+     *
      * @param  string $serviceName
      * @return object|null
      */
@@ -193,7 +193,7 @@ class ServiceFactory
 
     /**
      * Check if service exists
-     * 
+     *
      * @param  string $serviceName
      * @return bool
      */
@@ -204,11 +204,11 @@ class ServiceFactory
 
     /**
      * Get available service names
-     * 
+     *
      * @return array<string>
      */
     public function getAvailableServices(): array
     {
         return ['items', 'boards', 'columns'];
     }
-} 
+}

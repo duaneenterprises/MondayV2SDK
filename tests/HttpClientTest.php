@@ -37,10 +37,12 @@ class HttpClientTest extends TestCase
     {
         // Create a mock Guzzle client
         $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
-        
+
         // Mock successful response
         $mockResponse = new Response(
-            200, [], json_encode(
+            200,
+            [],
+            json_encode(
                 [
                 'data' => [
                 'boards' => [
@@ -58,7 +60,7 @@ class HttpClientTest extends TestCase
 
         // Create HttpClient and inject the mock
         $httpClient = new HttpClient($this->testApiToken, $this->testConfig);
-        
+
         // Replace the Guzzle client using reflection
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -77,10 +79,12 @@ class HttpClientTest extends TestCase
     {
         // Create a mock Guzzle client
         $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
-        
+
         // Mock successful response
         $mockResponse = new Response(
-            200, [], json_encode(
+            200,
+            [],
+            json_encode(
                 [
                 'data' => [
                 'create_item' => [
@@ -99,7 +103,7 @@ class HttpClientTest extends TestCase
 
         // Create HttpClient and inject the mock
         $httpClient = new HttpClient($this->testApiToken, $this->testConfig);
-        
+
         // Replace the Guzzle client using reflection
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -118,10 +122,12 @@ class HttpClientTest extends TestCase
     {
         // Create a mock Guzzle client
         $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
-        
+
         // Mock GraphQL error response
         $mockResponse = new Response(
-            200, [], json_encode(
+            200,
+            [],
+            json_encode(
                 [
                 'errors' => [
                 [
@@ -140,7 +146,7 @@ class HttpClientTest extends TestCase
 
         // Create HttpClient and inject the mock
         $httpClient = new HttpClient($this->testApiToken, $this->testConfig);
-        
+
         // Replace the Guzzle client using reflection
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -149,7 +155,7 @@ class HttpClientTest extends TestCase
 
         // Test that GraphQL error is thrown
         $this->expectException(MondayApiException::class);
-        
+
         $query = 'query { invalid_query }';
         $httpClient->query($query);
     }
@@ -158,13 +164,15 @@ class HttpClientTest extends TestCase
     {
         // Create a mock Guzzle client
         $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
-        
+
         // Mock rate limit response
         $mockResponse = new Response(
-            429, [
+            429,
+            [
             'Retry-After' => '60',
             'X-RateLimit-Reset' => time() + 60
-            ], json_encode(
+            ],
+            json_encode(
                 [
                 'error_message' => 'Rate limit exceeded'
                 ]
@@ -178,7 +186,7 @@ class HttpClientTest extends TestCase
 
         // Create HttpClient and inject the mock
         $httpClient = new HttpClient($this->testApiToken, $this->testConfig);
-        
+
         // Replace the Guzzle client using reflection
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -187,7 +195,7 @@ class HttpClientTest extends TestCase
 
         // Test that rate limit exception is thrown
         $this->expectException(RateLimitException::class);
-        
+
         $query = 'query { boards { id name } }';
         $httpClient->query($query);
     }
@@ -196,10 +204,12 @@ class HttpClientTest extends TestCase
     {
         // Create a mock Guzzle client
         $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
-        
+
         // Mock HTTP error response
         $mockResponse = new Response(
-            500, [], json_encode(
+            500,
+            [],
+            json_encode(
                 [
                 'error_message' => 'Internal server error'
                 ]
@@ -213,7 +223,7 @@ class HttpClientTest extends TestCase
 
         // Create HttpClient and inject the mock
         $httpClient = new HttpClient($this->testApiToken, $this->testConfig);
-        
+
         // Replace the Guzzle client using reflection
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -223,7 +233,7 @@ class HttpClientTest extends TestCase
         // Test that HTTP error exception is thrown
         $this->expectException(MondayApiException::class);
         $this->expectExceptionMessage('HTTP error: 500');
-        
+
         $query = 'query { boards { id name } }';
         $httpClient->query($query);
     }
@@ -232,7 +242,7 @@ class HttpClientTest extends TestCase
     {
         // Create a mock Guzzle client
         $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
-        
+
         // Mock network exception
         $mockGuzzleClient->shouldReceive('post')
             ->once()
@@ -247,7 +257,7 @@ class HttpClientTest extends TestCase
 
         // Create HttpClient and inject the mock
         $httpClient = new HttpClient($this->testApiToken, $this->testConfig);
-        
+
         // Replace the Guzzle client using reflection
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -257,7 +267,7 @@ class HttpClientTest extends TestCase
         // Test that network exception is thrown
         $this->expectException(MondayApiException::class);
         $this->expectExceptionMessage('Network error');
-        
+
         $query = 'query { boards { id name } }';
         $httpClient->query($query);
     }
@@ -266,7 +276,7 @@ class HttpClientTest extends TestCase
     {
         // Create a mock Guzzle client
         $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
-        
+
         // Mock invalid JSON response
         $mockResponse = new Response(200, [], 'invalid json');
 
@@ -277,7 +287,7 @@ class HttpClientTest extends TestCase
 
         // Create HttpClient and inject the mock
         $httpClient = new HttpClient($this->testApiToken, $this->testConfig);
-        
+
         // Replace the Guzzle client using reflection
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -286,8 +296,8 @@ class HttpClientTest extends TestCase
 
         // Test that JSON decode exception is thrown
         $this->expectException(MondayApiException::class);
-        
+
         $query = 'query { boards { id name } }';
         $httpClient->query($query);
     }
-} 
+}

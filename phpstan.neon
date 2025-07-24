@@ -8,7 +8,7 @@ parameters:
     ignoreErrors:
         # Mockery type issues - these are false positives
         - '#Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage::once\(\)#'
-        - '#Call to an undefined method MondayV2SDK\\Core\\HttpClient::shouldReceive\(\)#'
-        - '#Call to an undefined method GuzzleHttp\\Client::shouldReceive\(\)#'
+        - '#Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage::andThrow\(\)#'
+        - '#Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage::with\(\)#'
         - '#Property MondayV2SDK\\Tests\\RateLimiterTest::\$logger is never read, only written#'
     treatPhpDocTypesAsCertain: false 

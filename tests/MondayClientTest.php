@@ -25,7 +25,8 @@ class MondayClientTest extends TestCase
     protected function setUp(): void
     {
         $this->client = new MondayClient(
-            $this->testApiToken, [
+            $this->testApiToken,
+            [
             'timeout' => 30,
             'rate_limit' => [
                 'minute_limit' => 100,
@@ -50,12 +51,12 @@ class MondayClientTest extends TestCase
     private function injectMockedHttpClient($mockHttpClient): void
     {
         $reflection = new \ReflectionClass($this->client);
-        
+
         // Inject into main client
         $httpClientProperty = $reflection->getProperty('httpClient');
         $httpClientProperty->setAccessible(true);
         $httpClientProperty->setValue($this->client, $mockHttpClient);
-        
+
         // Inject into all services
         $services = ['boardService', 'itemService', 'columnService', 'userService', 'workspaceService'];
         foreach ($services as $serviceName) {
@@ -63,7 +64,7 @@ class MondayClientTest extends TestCase
                 $serviceProperty = $reflection->getProperty($serviceName);
                 $serviceProperty->setAccessible(true);
                 $service = $serviceProperty->getValue($this->client);
-                
+
                 if ($service) {
                     $serviceReflection = new \ReflectionClass($service);
                     $serviceHttpClientProperty = $serviceReflection->getProperty('httpClient');
@@ -131,7 +132,7 @@ class MondayClientTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         $mockResponse = [
             'data' => [
                 'boards' => [
@@ -160,7 +161,7 @@ class MondayClientTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         $mockResponse = [
             'create_item' => [
                 'id' => '1234567891',
@@ -187,7 +188,7 @@ class MondayClientTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         $mockResponse = [
             'boards' => [
                 [
@@ -226,7 +227,7 @@ class MondayClientTest extends TestCase
     {
         // Create a mock HttpClient
         $mockHttpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         $mockResponse = [
             'create_item' => [
                 'id' => '1234567891',
@@ -257,4 +258,4 @@ class MondayClientTest extends TestCase
         $this->assertArrayHasKey('name', $result);
         $this->assertEquals('New Task', $result['name']);
     }
-} 
+}

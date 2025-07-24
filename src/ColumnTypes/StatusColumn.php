@@ -4,7 +4,7 @@ namespace MondayV2SDK\ColumnTypes;
 
 /**
  * Status column type for Monday.com
- * 
+ *
  * Handles status columns with labels and colors.
  */
 class StatusColumn extends AbstractColumnType
@@ -14,7 +14,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Constructor
-     * 
+     *
      * @param string      $columnId The column ID
      * @param string      $label    The status label
      * @param string|null $color    The status color (optional)
@@ -23,9 +23,10 @@ class StatusColumn extends AbstractColumnType
     {
         $this->label = $label;
         $this->color = $color;
-        
+
         parent::__construct(
-            $columnId, [
+            $columnId,
+            [
             'label' => $label,
             'color' => $color
             ]
@@ -34,7 +35,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     public function getType(): string
@@ -44,7 +45,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Validate the status value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -62,23 +63,23 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Get the column value for API
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getValue(): array
     {
         $value = ['labels' => [$this->label]];
-        
+
         if ($this->color) {
             $value['color'] = $this->color;
         }
-        
+
         return $value;
     }
 
     /**
      * Create a status column with just a label
-     * 
+     *
      * @param  string $columnId The column ID
      * @param  string $label    The status label
      * @return self
@@ -90,7 +91,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Create a status column with label and color
-     * 
+     *
      * @param  string $columnId The column ID
      * @param  string $label    The status label
      * @param  string $color    The status color
@@ -103,7 +104,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Create an empty status column
-     * 
+     *
      * @param  string $columnId The column ID
      * @return self
      */
@@ -114,7 +115,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Get the status label
-     * 
+     *
      * @return string
      */
     public function getLabel(): string
@@ -124,7 +125,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Get the status color
-     * 
+     *
      * @return string|null
      */
     public function getColor(): ?string
@@ -134,7 +135,7 @@ class StatusColumn extends AbstractColumnType
 
     /**
      * Validate color format
-     * 
+     *
      * @param  string $color
      * @return bool
      */
@@ -153,4 +154,4 @@ class StatusColumn extends AbstractColumnType
         // Check if it's a valid hex color
         return preg_match('/^#[0-9A-F]{6}$/i', $color) === 1;
     }
-} 
+}

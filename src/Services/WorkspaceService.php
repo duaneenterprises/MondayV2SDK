@@ -9,7 +9,7 @@ use MondayV2SDK\Exceptions\MondayApiException;
 
 /**
  * Service for managing Monday.com workspaces
- * 
+ *
  * Provides methods for querying workspace information and managing workspace-related data.
  */
 class WorkspaceService
@@ -20,8 +20,8 @@ class WorkspaceService
 
     /**
      * Constructor
-     * 
-     * @param HttpClient  $httpClient
+     *
+     * @param HttpClientInterface  $httpClient
      * @param RateLimiter $rateLimiter
      * @param Logger      $logger
      */
@@ -34,7 +34,7 @@ class WorkspaceService
 
     /**
      * Get all workspaces
-     * 
+     *
      * @param  array<string, mixed> $options Query options
      * @return array<int, array<string, mixed>> Workspaces data
      * @throws MondayApiException
@@ -84,7 +84,7 @@ class WorkspaceService
 
     /**
      * Get a workspace by ID
-     * 
+     *
      * @param  int $workspaceId Workspace ID
      * @return array<string, mixed> Workspace data
      * @throws MondayApiException
@@ -136,7 +136,7 @@ class WorkspaceService
 
     /**
      * Get boards in a workspace
-     * 
+     *
      * @param  int                  $workspaceId Workspace ID
      * @param  array<string, mixed> $options     Query options
      * @return array<int, array<string, mixed>> Boards data
@@ -178,7 +178,7 @@ class WorkspaceService
 
     /**
      * Get workspace subscribers
-     * 
+     *
      * @param  int $workspaceId Workspace ID
      * @return array<int, array<string, mixed>> Subscribers data
      * @throws MondayApiException
@@ -229,7 +229,7 @@ class WorkspaceService
 
     /**
      * Get workspace owners
-     * 
+     *
      * @param  int $workspaceId Workspace ID
      * @return array<int, array<string, mixed>> Owners data
      * @throws MondayApiException
@@ -277,4 +277,4 @@ class WorkspaceService
         $response = $this->httpClient->query($query, $variables);
         return $response['workspaces'][0]['owners'] ?? [];
     }
-} 
+}

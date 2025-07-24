@@ -4,7 +4,7 @@ namespace MondayV2SDK\Core\Configuration;
 
 /**
  * HTTP client configuration
- * 
+ *
  * Encapsulates all HTTP client settings with proper validation
  * and default values.
  */
@@ -34,7 +34,7 @@ class HttpClientConfig
 
     /**
      * Create from array configuration
-     * 
+     *
      * @param  array<string, mixed> $config
      * @return self
      */
@@ -50,7 +50,7 @@ class HttpClientConfig
 
     /**
      * Convert to array for backward compatibility
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -65,7 +65,7 @@ class HttpClientConfig
 
     /**
      * Get API token
-     * 
+     *
      * @return string
      */
     public function getApiToken(): string
@@ -75,7 +75,7 @@ class HttpClientConfig
 
     /**
      * Get timeout
-     * 
+     *
      * @return int
      */
     public function getTimeout(): int
@@ -85,7 +85,7 @@ class HttpClientConfig
 
     /**
      * Get connect timeout
-     * 
+     *
      * @return int
      */
     public function getConnectTimeout(): int
@@ -95,7 +95,7 @@ class HttpClientConfig
 
     /**
      * Get base URL
-     * 
+     *
      * @return string
      */
     public function getBaseUrl(): string
@@ -105,7 +105,7 @@ class HttpClientConfig
 
     /**
      * Validate configuration values
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     private function validate(): void
@@ -130,4 +130,4 @@ class HttpClientConfig
             throw new \InvalidArgumentException('Base URL must be a valid URL');
         }
     }
-} 
+}

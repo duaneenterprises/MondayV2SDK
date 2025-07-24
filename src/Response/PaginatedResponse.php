@@ -4,7 +4,7 @@ namespace MondayV2SDK\Response;
 
 /**
  * Response DTO for paginated data
- * 
+ *
  * Provides type-safe access to paginated response data
  * from Monday.com API.
  */
@@ -21,7 +21,7 @@ class PaginatedResponse
 
     /**
      * Get cursor for next page
-     * 
+     *
      * @return string|null
      */
     public function getCursor(): ?string
@@ -31,7 +31,7 @@ class PaginatedResponse
 
     /**
      * Get items
-     * 
+     *
      * @return array
      */
     public function getItems(): array
@@ -41,7 +41,7 @@ class PaginatedResponse
 
     /**
      * Check if there are more pages
-     * 
+     *
      * @return bool
      */
     public function hasNextPage(): bool
@@ -51,7 +51,7 @@ class PaginatedResponse
 
     /**
      * Get item count
-     * 
+     *
      * @return int
      */
     public function getCount(): int
@@ -61,7 +61,7 @@ class PaginatedResponse
 
     /**
      * Check if response is empty
-     * 
+     *
      * @return bool
      */
     public function isEmpty(): bool
@@ -71,7 +71,7 @@ class PaginatedResponse
 
     /**
      * Get first item
-     * 
+     *
      * @return mixed|null
      */
     public function getFirstItem()
@@ -81,7 +81,7 @@ class PaginatedResponse
 
     /**
      * Get last item
-     * 
+     *
      * @return mixed|null
      */
     public function getLastItem()
@@ -92,7 +92,7 @@ class PaginatedResponse
 
     /**
      * Create from API response array
-     * 
+     *
      * @param  array<string, mixed> $data
      * @return self
      */
@@ -106,7 +106,7 @@ class PaginatedResponse
 
     /**
      * Convert to array for backward compatibility
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -119,7 +119,7 @@ class PaginatedResponse
 
     /**
      * Map items using a callback function
-     * 
+     *
      * @param  callable $callback
      * @return array
      */
@@ -130,7 +130,7 @@ class PaginatedResponse
 
     /**
      * Filter items using a callback function
-     * 
+     *
      * @param  callable $callback
      * @return array
      */
@@ -138,4 +138,4 @@ class PaginatedResponse
     {
         return array_filter($this->items, $callback);
     }
-} 
+}

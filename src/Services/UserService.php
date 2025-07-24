@@ -9,7 +9,7 @@ use MondayV2SDK\Exceptions\MondayApiException;
 
 /**
  * Service for managing Monday.com users
- * 
+ *
  * Provides methods for querying user information and managing user-related data.
  */
 class UserService
@@ -20,8 +20,8 @@ class UserService
 
     /**
      * Constructor
-     * 
-     * @param HttpClient  $httpClient
+     *
+     * @param HttpClientInterface  $httpClient
      * @param RateLimiter $rateLimiter
      * @param Logger      $logger
      */
@@ -34,7 +34,7 @@ class UserService
 
     /**
      * Get all users
-     * 
+     *
      * @param  array<string, mixed> $options Query options
      * @return array<int, array<string, mixed>> Users data
      * @throws MondayApiException
@@ -88,7 +88,7 @@ class UserService
 
     /**
      * Get a user by ID
-     * 
+     *
      * @param  int $userId User ID
      * @return array<string, mixed> User data
      * @throws MondayApiException
@@ -144,7 +144,7 @@ class UserService
 
     /**
      * Get current user
-     * 
+     *
      * @return array<string, mixed> Current user data
      * @throws MondayApiException
      */
@@ -197,7 +197,7 @@ class UserService
 
     /**
      * Get users by board
-     * 
+     *
      * @param  int $boardId Board ID
      * @return array<int, array<string, mixed>> Users data
      * @throws MondayApiException
@@ -248,7 +248,7 @@ class UserService
 
     /**
      * Search users
-     * 
+     *
      * @param  string               $searchTerm Search term
      * @param  array<string, mixed> $options    Search options
      * @return array<int, array<string, mixed>> Matching users
@@ -299,4 +299,4 @@ class UserService
         $response = $this->httpClient->query($query, $variables);
         return $response['users'] ?? [];
     }
-} 
+}

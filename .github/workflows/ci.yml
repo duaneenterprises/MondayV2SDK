@@ -36,7 +36,7 @@ jobs:
       run: vendor/bin/phpunit --coverage-text
       
     - name: Run PHPStan static analysis
-      run: vendor/bin/phpstan analyse --no-progress
+      run: php -d memory_limit=512M vendor/bin/phpstan analyse --no-progress
       
     - name: Run PHP CodeSniffer
       run: vendor/bin/phpcs --standard=PSR12 src tests 

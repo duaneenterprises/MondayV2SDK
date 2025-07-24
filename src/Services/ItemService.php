@@ -11,7 +11,7 @@ use MondayV2SDK\Exceptions\MondayApiException;
 
 /**
  * Service for managing items on Monday.com boards
- * 
+ *
  * Provides methods for creating, updating, deleting, and querying items
  * with support for pagination and complex column types.
  */
@@ -23,8 +23,8 @@ class ItemService
 
     /**
      * Constructor
-     * 
-     * @param HttpClient  $httpClient
+     *
+     * @param HttpClientInterface  $httpClient
      * @param RateLimiter $rateLimiter
      * @param Logger      $logger
      */
@@ -37,7 +37,7 @@ class ItemService
 
     /**
      * Create a new item
-     * 
+     *
      * @param  array<string, mixed> $data Item data
      * @return array<string, mixed> Created item data
      * @throws MondayApiException
@@ -82,7 +82,8 @@ class ItemService
         ];
 
         $this->logger->info(
-            'Creating item', [
+            'Creating item',
+            [
             'board_id' => $boardId,
             'item_name' => $itemName,
             'column_values_count' => count($formattedColumnValues)
@@ -95,7 +96,7 @@ class ItemService
 
     /**
      * Update an existing item
-     * 
+     *
      * @param  int                  $itemId Item ID
      * @param  array<string, mixed> $data   Update data
      * @return array<string, mixed> Updated item data
@@ -136,7 +137,8 @@ class ItemService
         ];
 
         $this->logger->info(
-            'Updating item', [
+            'Updating item',
+            [
             'item_id' => $itemId,
             'column_values_count' => count($formattedColumnValues)
             ]
@@ -148,7 +150,7 @@ class ItemService
 
     /**
      * Delete an item
-     * 
+     *
      * @param  int $itemId Item ID
      * @return array<string, mixed> Deletion result
      * @throws MondayApiException
@@ -178,7 +180,7 @@ class ItemService
 
     /**
      * Get all items from a board
-     * 
+     *
      * @param  int                  $boardId Board ID
      * @param  array<string, mixed> $options Query options
      * @return array<string, mixed> Items data
@@ -191,7 +193,7 @@ class ItemService
         // Validate and sanitize input data
         $boardId = InputValidator::validateBoardId($boardId);
         $options = InputValidator::validateOptions($options);
-        
+
         $limit = InputValidator::validateLimit($options['limit'] ?? 500);
         $cursor = isset($options['cursor']) && $options['cursor'] ? InputValidator::validateCursor($options['cursor']) : null;
 
@@ -228,7 +230,8 @@ class ItemService
         ];
 
         $this->logger->info(
-            'Getting items from board', [
+            'Getting items from board',
+            [
             'board_id' => $boardId,
             'limit' => $limit
             ]
@@ -236,7 +239,7 @@ class ItemService
 
         $response = $this->httpClient->query($query, $variables);
         $itemsPage = $response['boards'][0]['items_page'] ?? [];
-        
+
         return [
             'cursor' => $itemsPage['cursor'] ?? null,
             'items' => $itemsPage['items'] ?? []
@@ -245,7 +248,7 @@ class ItemService
 
     /**
      * Get next page of items
-     * 
+     *
      * @param  string               $cursor  Cursor from previous page
      * @param  array<string, mixed> $options Query options
      * @return array<string, mixed> Items data
@@ -286,7 +289,7 @@ class ItemService
 
         $response = $this->httpClient->query($query, $variables);
         $itemsPage = $response['next_items_page'] ?? [];
-        
+
         return [
             'cursor' => $itemsPage['cursor'] ?? null,
             'items' => $itemsPage['items'] ?? []
@@ -295,7 +298,7 @@ class ItemService
 
     /**
      * Get a specific item
-     * 
+     *
      * @param  int $itemId Item ID
      * @return array<string, mixed> Item data
      * @throws MondayApiException
@@ -335,7 +338,7 @@ class ItemService
 
     /**
      * Search items by column values
-     * 
+     *
      * @param  int                  $boardId      Board ID
      * @param  array<string, mixed> $columnValues Column values to search for
      * @param  array<string, mixed> $options      Query options
@@ -388,7 +391,8 @@ class ItemService
         ];
 
         $this->logger->info(
-            'Searching items by column values', [
+            'Searching items by column values',
+            [
             'board_id' => $boardId,
             'column_id' => $firstColumnId,
             'column_value' => $firstColumnValue
@@ -408,7 +412,7 @@ class ItemService
 
     /**
      * Format column values for API
-     * 
+     *
      * @param  array<int, ColumnTypeInterface|array<string, mixed>> $columnValues Array of column values
      * @return array<string, string> Formatted column values
      */
@@ -436,7 +440,7 @@ class ItemService
 
     /**
      * Filter items by column values
-     * 
+     *
      * @param  array<int, array<string, mixed>> $items        Items to filter
      * @param  array<string, mixed>             $columnValues Column values to match
      * @return array<int, array<string, mixed>> Filtered items
@@ -444,7 +448,8 @@ class ItemService
     private function filterItemsByColumnValues(array $items, array $columnValues): array
     {
         return array_filter(
-            $items, function ($item) use ($columnValues) {
+            $items,
+            function ($item) use ($columnValues) {
                 if (!isset($item['column_values'])) {
                     return false;
                 }
@@ -455,7 +460,8 @@ class ItemService
                 }
 
                 foreach ($columnValues as $columnId => $expectedValue) {
-                    if (!isset($itemColumnValues[$columnId])  
+                    if (
+                        !isset($itemColumnValues[$columnId])
                         || $itemColumnValues[$columnId] != $expectedValue
                     ) {
                         return false;
@@ -466,4 +472,4 @@ class ItemService
             }
         );
     }
-} 
+}

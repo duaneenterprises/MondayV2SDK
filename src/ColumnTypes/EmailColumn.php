@@ -6,7 +6,7 @@ use MondayV2SDK\Core\InputValidator;
 
 /**
  * Email column type for Monday.com
- * 
+ *
  * Handles email columns with proper validation and formatting.
  * Supports separate email and text values, with fallback behavior.
  */
@@ -17,7 +17,7 @@ class EmailColumn extends AbstractColumnType
 
     /**
      * Constructor
-     * 
+     *
      * @param string      $columnId       The column ID
      * @param string      $email          The email address
      * @param string|null $text           The display text (optional, defaults to email)
@@ -33,13 +33,13 @@ class EmailColumn extends AbstractColumnType
             $this->email = InputValidator::validateEmail($email);
             $this->text = $text ? trim($text) : $this->email;
         }
-        
+
         parent::__construct($columnId, $this->email, $skipValidation);
     }
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     public function getType(): string
@@ -49,7 +49,7 @@ class EmailColumn extends AbstractColumnType
 
     /**
      * Validate the email value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -63,7 +63,7 @@ class EmailColumn extends AbstractColumnType
 
     /**
      * Get the column value for API
-     * 
+     *
      * @return array<string, string>
      */
     public function getValue(): array
@@ -76,7 +76,7 @@ class EmailColumn extends AbstractColumnType
 
     /**
      * Create an email column with separate email and text values
-     * 
+     *
      * @param  string $columnId The column ID
      * @param  string $email    The email address
      * @param  string $text     The display text
@@ -89,7 +89,7 @@ class EmailColumn extends AbstractColumnType
 
     /**
      * Create an empty email column
-     * 
+     *
      * @param  string $columnId The column ID
      * @return self
      */
@@ -100,7 +100,7 @@ class EmailColumn extends AbstractColumnType
 
     /**
      * Get the email address
-     * 
+     *
      * @return string
      */
     public function getEmail(): string
@@ -110,11 +110,11 @@ class EmailColumn extends AbstractColumnType
 
     /**
      * Get the display text
-     * 
+     *
      * @return string|null
      */
     public function getText(): ?string
     {
         return $this->text;
     }
-} 
+}

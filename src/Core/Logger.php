@@ -4,7 +4,7 @@ namespace MondayV2SDK\Core;
 
 /**
  * Logger for Monday.com SDK
- * 
+ *
  * Provides logging functionality for debugging and monitoring API interactions.
  * Supports different log levels and can be configured to write to files or other outputs.
  */
@@ -17,14 +17,14 @@ class Logger
         'error' => 3,
         'critical' => 4,
     ];
-    
+
     private string $logLevel;
     private ?string $logFile;
     private bool $enabled;
 
     /**
      * Constructor
-     * 
+     *
      * @param array<string, mixed> $config Logging configuration
      */
     public function __construct(array $config = [])
@@ -36,7 +36,7 @@ class Logger
 
     /**
      * Log a debug message
-     * 
+     *
      * @param string               $message
      * @param array<string, mixed> $context
      */
@@ -47,7 +47,7 @@ class Logger
 
     /**
      * Log an info message
-     * 
+     *
      * @param string               $message
      * @param array<string, mixed> $context
      */
@@ -58,7 +58,7 @@ class Logger
 
     /**
      * Log a warning message
-     * 
+     *
      * @param string               $message
      * @param array<string, mixed> $context
      */
@@ -69,7 +69,7 @@ class Logger
 
     /**
      * Log an error message
-     * 
+     *
      * @param string               $message
      * @param array<string, mixed> $context
      */
@@ -80,7 +80,7 @@ class Logger
 
     /**
      * Log a critical message
-     * 
+     *
      * @param string               $message
      * @param array<string, mixed> $context
      */
@@ -91,7 +91,7 @@ class Logger
 
     /**
      * Log a message with the specified level
-     * 
+     *
      * @param string               $level
      * @param string               $message
      * @param array<string, mixed> $context
@@ -103,7 +103,7 @@ class Logger
         }
 
         $logEntry = $this->formatLogEntry($level, $message, $context);
-        
+
         if ($this->logFile) {
             $this->writeToFile($logEntry);
         } else {
@@ -113,7 +113,7 @@ class Logger
 
     /**
      * Check if the message should be logged based on current log level
-     * 
+     *
      * @param  string $level
      * @return bool
      */
@@ -124,7 +124,7 @@ class Logger
 
     /**
      * Format a log entry
-     * 
+     *
      * @param  string               $level
      * @param  string               $message
      * @param  array<string, mixed> $context
@@ -134,13 +134,13 @@ class Logger
     {
         $timestamp = date('Y-m-d H:i:s');
         $contextStr = empty($context) ? '' : ' ' . json_encode($context);
-        
+
         return "[{$timestamp}] [{$level}] {$message}{$contextStr}" . PHP_EOL;
     }
 
     /**
      * Write log entry to file
-     * 
+     *
      * @param string $logEntry
      */
     private function writeToFile(string $logEntry): void
@@ -159,7 +159,7 @@ class Logger
 
     /**
      * Write log entry to error log
-     * 
+     *
      * @param string $logEntry
      */
     private function writeToErrorLog(string $logEntry): void
@@ -169,7 +169,7 @@ class Logger
 
     /**
      * Set log level
-     * 
+     *
      * @param string $level
      */
     public function setLogLevel(string $level): void
@@ -181,7 +181,7 @@ class Logger
 
     /**
      * Set log file
-     * 
+     *
      * @param string $logFile
      */
     public function setLogFile(string $logFile): void
@@ -191,7 +191,7 @@ class Logger
 
     /**
      * Enable or disable logging
-     * 
+     *
      * @param bool $enabled
      */
     public function setEnabled(bool $enabled): void
@@ -201,7 +201,7 @@ class Logger
 
     /**
      * Get current log level
-     * 
+     *
      * @return string
      */
     public function getLogLevel(): string
@@ -211,7 +211,7 @@ class Logger
 
     /**
      * Get log file path
-     * 
+     *
      * @return string|null
      */
     public function getLogFile(): ?string
@@ -221,11 +221,11 @@ class Logger
 
     /**
      * Check if logging is enabled
-     * 
+     *
      * @return bool
      */
     public function isEnabled(): bool
     {
         return $this->enabled;
     }
-} 
+}

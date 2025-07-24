@@ -6,7 +6,7 @@ use MondayV2SDK\Exceptions\RateLimitException;
 
 /**
  * Rate limiter for Monday.com API
- * 
+ *
  * Implements rate limiting logic to prevent hitting Monday.com's API limits.
  * Supports both per-minute and daily limits with automatic retry logic.
  * Includes periodic cleanup to prevent memory leaks.
@@ -18,22 +18,22 @@ class RateLimiter
     private const DEFAULT_RETRY_DELAY = 60;
     private const DEFAULT_CLEANUP_INTERVAL = 300; // 5 minutes
     private const DEFAULT_MAX_ARRAY_SIZE = 10000; // Prevent arrays from growing too large
-    
+
     private int $minuteLimit;
     private int $dailyLimit;
     private int $retryDelay;
     private int $cleanupInterval;
     private int $maxArraySize;
-    
+
     /**
-     * @var array<int, int> 
+     * @var array<int, int>
      */
     private array $requestTimes = [];
     /**
-     * @var array<string, int> 
+     * @var array<string, int>
      */
     private array $dailyRequests = [];
-    
+
     private Logger $logger;
     private int $lastCleanupTime = 0;
     private int $cleanupCount = 0;
@@ -41,7 +41,7 @@ class RateLimiter
 
     /**
      * Constructor
-     * 
+     *
      * @param array<string, mixed> $config Rate limiting configuration
      */
     public function __construct(array $config = [])
@@ -56,45 +56,47 @@ class RateLimiter
 
     /**
      * Check if request is allowed and wait if necessary
-     * 
+     *
      * @throws RateLimitException
      */
     public function checkLimit(): void
     {
         $now = time();
         $today = date('Y-m-d', $now);
-        
+
         // Perform periodic cleanup if needed
         $this->performPeriodicCleanup($now);
-        
+
         // Clean up old request times (older than 1 minute)
         $this->cleanupOldRequests($now);
-        
+
         // Check daily limit
         if (!$this->checkDailyLimit($today)) {
             $this->logger->warning(
-                'Daily rate limit exceeded', [
+                'Daily rate limit exceeded',
+                [
                 'daily_limit' => $this->dailyLimit,
                 'daily_requests' => $this->getDailyRequestCount($today),
                 ]
             );
-            
+
             throw new RateLimitException(
                 "Daily rate limit exceeded. Limit: {$this->dailyLimit}",
                 $this->retryDelay
             );
         }
-        
+
         // Check minute limit
         if (!$this->checkMinuteLimit($now)) {
             $waitTime = $this->calculateWaitTime($now);
             $this->logger->warning(
-                'Minute rate limit exceeded, waiting', [
+                'Minute rate limit exceeded, waiting',
+                [
                 'minute_limit' => $this->minuteLimit,
                 'wait_time' => $waitTime,
                 ]
             );
-            
+
             // Only sleep if not in test environment
             if (!defined('PHPUNIT_RUNNING') || !PHPUNIT_RUNNING) {
                 sleep($waitTime);
@@ -106,14 +108,14 @@ class RateLimiter
                 );
             }
         }
-        
+
         // Record this request
         $this->recordRequest($now, $today);
     }
 
     /**
      * Perform periodic cleanup to prevent memory leaks
-     * 
+     *
      * @param int $now Current timestamp
      */
     private function performPeriodicCleanup(int $now): void
@@ -122,27 +124,28 @@ class RateLimiter
         if ($now - $this->lastCleanupTime < $this->cleanupInterval) {
             return;
         }
-        
+
         $cleanupStart = microtime(true);
-        
+
         // Force cleanup of old requests
         $this->cleanupOldRequests($now);
-        
+
         // Force cleanup of old daily records
         $this->cleanupOldDailyRecords();
-        
+
         // Emergency cleanup if arrays are too large
         $this->emergencyCleanup();
-        
+
         $cleanupEnd = microtime(true);
         $cleanupDuration = (int)(($cleanupEnd - $cleanupStart) * 1000); // Convert to milliseconds and cast to int
-        
+
         $this->lastCleanupTime = $now;
         $this->cleanupCount++;
         $this->totalCleanupTime += $cleanupDuration;
-        
+
         $this->logger->debug(
-            'Periodic cleanup completed', [
+            'Periodic cleanup completed',
+            [
             'cleanup_duration_ms' => $cleanupDuration,
             'request_times_count' => count($this->requestTimes),
             'daily_requests_count' => count($this->dailyRequests),
@@ -159,27 +162,29 @@ class RateLimiter
     {
         $requestTimesSize = count($this->requestTimes);
         $dailyRequestsSize = count($this->dailyRequests);
-        
+
         if ($requestTimesSize > $this->maxArraySize) {
             $this->logger->warning(
-                'Emergency cleanup: request times array too large', [
+                'Emergency cleanup: request times array too large',
+                [
                 'current_size' => $requestTimesSize,
                 'max_size' => $this->maxArraySize,
                 ]
             );
-            
+
             // Keep only the most recent requests (up to minute limit)
             $this->requestTimes = array_slice($this->requestTimes, -$this->minuteLimit, null, true);
         }
-        
+
         if ($dailyRequestsSize > $this->maxArraySize) {
             $this->logger->warning(
-                'Emergency cleanup: daily requests array too large', [
+                'Emergency cleanup: daily requests array too large',
+                [
                 'current_size' => $dailyRequestsSize,
                 'max_size' => $this->maxArraySize,
                 ]
             );
-            
+
             // Keep only the most recent 30 days
             $this->dailyRequests = array_slice($this->dailyRequests, -30, null, true);
         }
@@ -187,25 +192,26 @@ class RateLimiter
 
     /**
      * Clean up old request times
-     * 
+     *
      * @param int $now Current timestamp
      */
     private function cleanupOldRequests(int $now): void
     {
         $cutoff = $now - 60; // Remove requests older than 1 minute
         $originalSize = count($this->requestTimes);
-        
+
         $this->requestTimes = array_filter(
             $this->requestTimes,
             fn($time) => $time >= $cutoff
         );
-        
+
         $newSize = count($this->requestTimes);
         $removed = $originalSize - $newSize;
-        
+
         if ($removed > 0) {
             $this->logger->debug(
-                'Cleaned up old request times', [
+                'Cleaned up old request times',
+                [
                 'removed_count' => $removed,
                 'remaining_count' => $newSize,
                 ]
@@ -215,7 +221,7 @@ class RateLimiter
 
     /**
      * Check daily limit
-     * 
+     *
      * @param  string $today Today's date
      * @return bool
      */
@@ -227,7 +233,7 @@ class RateLimiter
 
     /**
      * Check minute limit
-     * 
+     *
      * @param  int $now Current timestamp
      * @return bool
      */
@@ -239,7 +245,7 @@ class RateLimiter
 
     /**
      * Calculate wait time for rate limit
-     * 
+     *
      * @param  int $now Current timestamp
      * @return int Wait time in seconds
      */
@@ -248,24 +254,24 @@ class RateLimiter
         if (empty($this->requestTimes)) {
             return 1;
         }
-        
+
         $oldestRequest = min($this->requestTimes);
         $timeSinceOldest = $now - $oldestRequest;
-        
+
         // Wait until we have room for another request
         return max(1, (int)(60 - $timeSinceOldest));
     }
 
     /**
      * Record a request
-     * 
+     *
      * @param int    $now   Current timestamp
      * @param string $today Today's date
      */
     private function recordRequest(int $now, string $today): void
     {
         $this->requestTimes[] = $now;
-        
+
         if (!isset($this->dailyRequests[$today])) {
             $this->dailyRequests[$today] = 0;
         }
@@ -274,7 +280,7 @@ class RateLimiter
 
     /**
      * Get daily request count
-     * 
+     *
      * @param  string $today Today's date
      * @return int
      */
@@ -290,19 +296,20 @@ class RateLimiter
     {
         $cutoff = date('Y-m-d', strtotime('-7 days'));
         $originalSize = count($this->dailyRequests);
-        
+
         $this->dailyRequests = array_filter(
             $this->dailyRequests,
             fn($date) => $date >= $cutoff,
             ARRAY_FILTER_USE_KEY
         );
-        
+
         $newSize = count($this->dailyRequests);
         $removed = $originalSize - $newSize;
-        
+
         if ($removed > 0) {
             $this->logger->debug(
-                'Cleaned up old daily records', [
+                'Cleaned up old daily records',
+                [
                 'removed_count' => $removed,
                 'remaining_count' => $newSize,
                 ]
@@ -312,14 +319,14 @@ class RateLimiter
 
     /**
      * Get current usage statistics
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getUsageStats(): array
     {
         $now = time();
         $today = date('Y-m-d', $now);
-        
+
         return [
             'minute_requests' => count($this->requestTimes),
             'minute_limit' => $this->minuteLimit,
@@ -347,28 +354,29 @@ class RateLimiter
     public function forceCleanup(): void
     {
         $now = time();
-        
+
         // Bypass the time check for forced cleanup
         $cleanupStart = microtime(true);
-        
+
         // Force cleanup of old requests
         $this->cleanupOldRequests($now);
-        
+
         // Force cleanup of old daily records
         $this->cleanupOldDailyRecords();
-        
+
         // Emergency cleanup if arrays are too large
         $this->emergencyCleanup();
-        
+
         $cleanupEnd = microtime(true);
         $cleanupDuration = (int)(($cleanupEnd - $cleanupStart) * 1000); // Convert to milliseconds and cast to int
-        
+
         $this->lastCleanupTime = $now;
         $this->cleanupCount++;
         $this->totalCleanupTime += $cleanupDuration;
-        
+
         $this->logger->debug(
-            'Forced cleanup completed', [
+            'Forced cleanup completed',
+            [
             'cleanup_duration_ms' => $cleanupDuration,
             'request_times_count' => count($this->requestTimes),
             'daily_requests_count' => count($this->dailyRequests),
@@ -380,7 +388,7 @@ class RateLimiter
 
     /**
      * Get cleanup configuration
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getCleanupConfig(): array
@@ -404,4 +412,4 @@ class RateLimiter
         $this->cleanupCount = 0;
         $this->totalCleanupTime = 0;
     }
-} 
+}

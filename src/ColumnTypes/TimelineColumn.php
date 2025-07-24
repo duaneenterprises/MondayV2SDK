@@ -4,7 +4,7 @@ namespace MondayV2SDK\ColumnTypes;
 
 /**
  * Timeline column type for Monday.com
- * 
+ *
  * Handles timeline/date range columns with proper validation and formatting.
  * Supports both date strings and DateTime objects.
  */
@@ -15,7 +15,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Constructor
-     * 
+     *
      * @param string $columnId  The column ID
      * @param string $startDate The start date (YYYY-MM-DD format)
      * @param string $endDate   The end date (YYYY-MM-DD format)
@@ -24,9 +24,10 @@ class TimelineColumn extends AbstractColumnType
     {
         $this->startDate = $this->formatDate($startDate);
         $this->endDate = $this->formatDate($endDate);
-        
+
         parent::__construct(
-            $columnId, [
+            $columnId,
+            [
             'date' => $this->startDate,
             'end_date' => $this->endDate
             ]
@@ -35,7 +36,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     public function getType(): string
@@ -45,7 +46,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Validate the timeline value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -67,7 +68,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Get the column value for API
-     * 
+     *
      * @return array<string, string>
      */
     public function getValue(): array
@@ -80,7 +81,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Create a timeline column from DateTime objects
-     * 
+     *
      * @param  string    $columnId  The column ID
      * @param  \DateTime $startDate The start date
      * @param  \DateTime $endDate   The end date
@@ -93,7 +94,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Create a timeline column from timestamps
-     * 
+     *
      * @param  string $columnId       The column ID
      * @param  int    $startTimestamp The start timestamp
      * @param  int    $endTimestamp   The end timestamp
@@ -106,7 +107,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Create an empty timeline column
-     * 
+     *
      * @param  string $columnId The column ID
      * @return self
      */
@@ -117,7 +118,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Get the start date
-     * 
+     *
      * @return string
      */
     public function getStartDate(): string
@@ -127,7 +128,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Get the end date
-     * 
+     *
      * @return string
      */
     public function getEndDate(): string
@@ -137,7 +138,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Get the duration in days
-     * 
+     *
      * @return int
      */
     public function getDurationInDays(): int
@@ -150,7 +151,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Format a date value
-     * 
+     *
      * @param  string $date The date to format
      * @return string Formatted date
      */
@@ -176,7 +177,7 @@ class TimelineColumn extends AbstractColumnType
 
     /**
      * Validate date format
-     * 
+     *
      * @param  string $date
      * @return bool
      */
@@ -194,4 +195,4 @@ class TimelineColumn extends AbstractColumnType
         // Check if the formatted date matches the input (handles edge cases)
         return date('Y-m-d', $timestamp) === $date;
     }
-} 
+}

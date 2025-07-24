@@ -4,6 +4,7 @@ namespace MondayV2SDK\Tests\TestHelpers;
 
 use Mockery;
 use MondayV2SDK\Core\HttpClientInterface;
+use MondayV2SDK\Core\GuzzleClientInterface;
 use MondayV2SDK\MondayClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response;
@@ -18,7 +19,7 @@ class MockHelper
     /**
      * Create a mock HttpClient with a successful response
      */
-    public static function createMockHttpClient(array $responseData = []): HttpClientInterface
+    public static function createMockHttpClient(array $responseData = []): \Mockery\MockInterface
     {
         $defaultResponse = [
             'boards' => [
@@ -27,11 +28,8 @@ class MockHelper
         ];
 
         $mockResponse = array_merge($defaultResponse, $responseData);
-        
-        /**
- * @var HttpClientInterface $mockHttpClient 
-*/
-        $mockHttpClient = Mockery::mock(HttpClientInterface::class)->makePartial();
+
+        $mockHttpClient = Mockery::mock(HttpClientInterface::class);
         $mockHttpClient->shouldReceive('query')
             ->andReturn($mockResponse);
         $mockHttpClient->shouldReceive('mutate')
@@ -43,12 +41,9 @@ class MockHelper
     /**
      * Create a mock HttpClient that throws an exception
      */
-    public static function createMockHttpClientWithException(\Exception $exception): HttpClientInterface
+    public static function createMockHttpClientWithException(\Exception $exception): \Mockery\MockInterface
     {
-        /**
- * @var HttpClientInterface $mockHttpClient 
-*/
-        $mockHttpClient = Mockery::mock(HttpClientInterface::class)->makePartial();
+        $mockHttpClient = Mockery::mock(HttpClientInterface::class);
         $mockHttpClient->shouldReceive('query')
             ->andThrow($exception);
         $mockHttpClient->shouldReceive('mutate')
@@ -60,7 +55,7 @@ class MockHelper
     /**
      * Create a mock Guzzle client with a successful response
      */
-    public static function createMockGuzzleClient(array $responseData = []): GuzzleClient
+    public static function createMockGuzzleClient(array $responseData = []): \Mockery\MockInterface
     {
         $defaultResponse = [
             'boards' => [
@@ -69,11 +64,8 @@ class MockHelper
         ];
 
         $mockResponse = array_merge($defaultResponse, $responseData);
-        
-        /**
- * @var GuzzleClient $mockGuzzleClient 
-*/
-        $mockGuzzleClient = Mockery::mock();
+
+        $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
         $mockGuzzleClient->shouldReceive('post')
             ->with('/', Mockery::type('array'))
             ->andReturn(new Response(200, [], json_encode($mockResponse)));
@@ -84,12 +76,9 @@ class MockHelper
     /**
      * Create a mock Guzzle client that returns an error response
      */
-    public static function createMockGuzzleClientWithError(int $statusCode, array $headers = [], string $body = ''): GuzzleClient
+    public static function createMockGuzzleClientWithError(int $statusCode, array $headers = [], string $body = ''): \Mockery\MockInterface
     {
-        /**
- * @var GuzzleClient $mockGuzzleClient 
-*/
-        $mockGuzzleClient = Mockery::mock();
+        $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
         $mockGuzzleClient->shouldReceive('post')
             ->with('/', Mockery::type('array'))
             ->andReturn(new Response($statusCode, $headers, $body));
@@ -100,12 +89,9 @@ class MockHelper
     /**
      * Create a mock Guzzle client that throws an exception
      */
-    public static function createMockGuzzleClientWithException(\Exception $exception): GuzzleClient
+    public static function createMockGuzzleClientWithException(\Exception $exception): \Mockery\MockInterface
     {
-        /**
- * @var GuzzleClient $mockGuzzleClient 
-*/
-        $mockGuzzleClient = Mockery::mock();
+        $mockGuzzleClient = Mockery::mock(GuzzleClientInterface::class);
         $mockGuzzleClient->shouldReceive('post')
             ->with('/', Mockery::type('array'))
             ->andThrow($exception);
@@ -119,12 +105,12 @@ class MockHelper
     public static function injectMockHttpClient(MondayClient $client, $mockHttpClient): void
     {
         $reflection = new \ReflectionClass($client);
-        
+
         // Inject into main client
         $httpClientProperty = $reflection->getProperty('httpClient');
         $httpClientProperty->setAccessible(true);
         $httpClientProperty->setValue($client, $mockHttpClient);
-        
+
         // Inject into all services
         $services = ['boardService', 'itemService', 'columnService', 'userService', 'workspaceService'];
         foreach ($services as $serviceName) {
@@ -132,7 +118,7 @@ class MockHelper
                 $serviceProperty = $reflection->getProperty($serviceName);
                 $serviceProperty->setAccessible(true);
                 $service = $serviceProperty->getValue($client);
-                
+
                 if ($service) {
                     $serviceReflection = new \ReflectionClass($service);
                     $serviceHttpClientProperty = $serviceReflection->getProperty('httpClient');
@@ -146,7 +132,7 @@ class MockHelper
     /**
      * Inject a mock Guzzle client into an HttpClient
      */
-    public static function injectMockGuzzleClient(HttpClientInterface $httpClient, GuzzleClient $mockGuzzleClient): void
+    public static function injectMockGuzzleClient(HttpClientInterface $httpClient, GuzzleClientInterface $mockGuzzleClient): void
     {
         $reflection = new \ReflectionClass($httpClient);
         $guzzleClientProperty = $reflection->getProperty('guzzleClient');
@@ -230,14 +216,16 @@ class MockHelper
     public static function createRateLimitResponse(int $retryAfter = 60): Response
     {
         return new Response(
-            429, [
+            429,
+            [
             'Retry-After' => (string) $retryAfter,
             'X-RateLimit-Reset' => (string) (time() + $retryAfter)
-            ], json_encode(
+            ],
+            json_encode(
                 [
                 'error_message' => 'Rate limit exceeded'
                 ]
             )
         );
     }
-} 
+}

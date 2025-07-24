@@ -21,7 +21,7 @@ class MondayClientIntegrationTest extends TestCase
 {
     private MondayClient $client;
     /**
-     * @var \Mockery\MockInterface|HttpClient 
+     * @var \Mockery\MockInterface|HttpClientInterface
      */
     private $httpClient;
     private string $testApiToken = 'test-api-token';
@@ -30,10 +30,11 @@ class MondayClientIntegrationTest extends TestCase
     {
         // Create a mock HttpClient
         $this->httpClient = Mockery::mock(HttpClientInterface::class);
-        
+
         // Create the client with mocked dependencies
         $this->client = new MondayClient(
-            $this->testApiToken, [
+            $this->testApiToken,
+            [
             'timeout' => 30,
             'rate_limit' => [
                 'minute_limit' => 100,
@@ -58,12 +59,12 @@ class MondayClientIntegrationTest extends TestCase
     private function injectMockedHttpClient(): void
     {
         $reflection = new \ReflectionClass($this->client);
-        
+
         // Inject into main client
         $httpClientProperty = $reflection->getProperty('httpClient');
         $httpClientProperty->setAccessible(true);
         $httpClientProperty->setValue($this->client, $this->httpClient);
-        
+
         // Inject into all services
         $services = ['boardService', 'itemService', 'columnService', 'userService', 'workspaceService'];
         foreach ($services as $serviceName) {
@@ -71,7 +72,7 @@ class MondayClientIntegrationTest extends TestCase
                 $serviceProperty = $reflection->getProperty($serviceName);
                 $serviceProperty->setAccessible(true);
                 $service = $serviceProperty->getValue($this->client);
-                
+
                 if ($service) {
                     $serviceReflection = new \ReflectionClass($service);
                     $serviceHttpClientProperty = $serviceReflection->getProperty('httpClient');
@@ -161,7 +162,9 @@ class MondayClientIntegrationTest extends TestCase
             ->once()
             ->andThrow(
                 new MondayApiException(
-                    'GraphQL error', 400, [
+                    'GraphQL error',
+                    400,
+                    [
                     'errors' => [
                     [
                         'message' => 'Invalid query',
@@ -267,4 +270,4 @@ class MondayClientIntegrationTest extends TestCase
         $query = 'query { boards { id name } }';
         $this->client->query($query);
     }
-} 
+}

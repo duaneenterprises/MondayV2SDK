@@ -6,7 +6,7 @@ use DateTimeImmutable;
 
 /**
  * Response DTO for item data
- * 
+ *
  * Provides type-safe access to item response data
  * from Monday.com API.
  */
@@ -37,7 +37,7 @@ class ItemResponse
 
     /**
      * Get item ID
-     * 
+     *
      * @return string
      */
     public function getId(): string
@@ -47,7 +47,7 @@ class ItemResponse
 
     /**
      * Get item name
-     * 
+     *
      * @return string
      */
     public function getName(): string
@@ -57,7 +57,7 @@ class ItemResponse
 
     /**
      * Get item state
-     * 
+     *
      * @return string
      */
     public function getState(): string
@@ -67,7 +67,7 @@ class ItemResponse
 
     /**
      * Get creation date
-     * 
+     *
      * @return DateTimeImmutable
      */
     public function getCreatedAt(): DateTimeImmutable
@@ -77,7 +77,7 @@ class ItemResponse
 
     /**
      * Get update date
-     * 
+     *
      * @return DateTimeImmutable
      */
     public function getUpdatedAt(): DateTimeImmutable
@@ -87,7 +87,7 @@ class ItemResponse
 
     /**
      * Get column values
-     * 
+     *
      * @return array
      */
     public function getColumnValues(): array
@@ -97,7 +97,7 @@ class ItemResponse
 
     /**
      * Create from API response array
-     * 
+     *
      * @param  array<string, mixed> $data
      * @return self
      */
@@ -115,7 +115,7 @@ class ItemResponse
 
     /**
      * Convert to array for backward compatibility
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -132,7 +132,7 @@ class ItemResponse
 
     /**
      * Get column value by ID
-     * 
+     *
      * @param  string $columnId
      * @return array<string, mixed>|null
      */
@@ -143,13 +143,13 @@ class ItemResponse
                 return $columnValue;
             }
         }
-        
+
         return null;
     }
 
     /**
      * Check if item has a specific column value
-     * 
+     *
      * @param  string $columnId
      * @return bool
      */
@@ -160,7 +160,7 @@ class ItemResponse
 
     /**
      * Get all column values as associative array
-     * 
+     *
      * @return array<string, array<string, mixed>>
      */
     public function getColumnValuesMap(): array
@@ -173,4 +173,4 @@ class ItemResponse
         }
         return $map;
     }
-} 
+}

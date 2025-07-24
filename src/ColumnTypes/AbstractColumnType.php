@@ -4,7 +4,7 @@ namespace MondayV2SDK\ColumnTypes;
 
 /**
  * Abstract base class for all column types
- * 
+ *
  * Provides common functionality and default implementations for column types.
  * All specific column type classes should extend this class.
  */
@@ -15,7 +15,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
 
     /**
      * Constructor
-     * 
+     *
      * @param string $columnId       The column ID
      * @param mixed  $value          The column value
      * @param bool   $skipValidation Whether to skip validation
@@ -24,7 +24,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
     {
         $this->columnId = $columnId;
         $this->value = $value;
-        
+
         if (!$skipValidation) {
             $this->validate();
         }
@@ -32,7 +32,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
 
     /**
      * Get the column ID
-     * 
+     *
      * @return string
      */
     public function getColumnId(): string
@@ -42,7 +42,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
 
     /**
      * Get the column value
-     * 
+     *
      * @return mixed
      */
     public function getValue(): mixed
@@ -52,7 +52,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
 
     /**
      * Get the column value as a JSON string
-     * 
+     *
      * @return string
      */
     public function toJson(): string
@@ -66,7 +66,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
 
     /**
      * Get the column value as an array
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -80,7 +80,7 @@ abstract class AbstractColumnType implements ColumnTypeInterface
 
     /**
      * Validate the column value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -92,8 +92,8 @@ abstract class AbstractColumnType implements ColumnTypeInterface
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     abstract public function getType(): string;
-} 
+}

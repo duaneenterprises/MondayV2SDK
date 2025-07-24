@@ -4,20 +4,20 @@ namespace MondayV2SDK\Exceptions;
 
 /**
  * Exception thrown when Monday.com API returns an error
- * 
+ *
  * This exception is thrown when the Monday.com API returns an error response,
  * including GraphQL errors, HTTP errors, and other API-related issues.
  */
 class MondayApiException extends \Exception
 {
     /**
-     * @var array<string, mixed> 
+     * @var array<string, mixed>
      */
     private array $context;
 
     /**
      * Constructor
-     * 
+     *
      * @param string               $message  Error message
      * @param int                  $code     Error code
      * @param array<string, mixed> $context  Additional context data
@@ -31,7 +31,7 @@ class MondayApiException extends \Exception
 
     /**
      * Get additional context data
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getContext(): array
@@ -41,7 +41,7 @@ class MondayApiException extends \Exception
 
     /**
      * Get GraphQL errors if any
-     * 
+     *
      * @return array<int, array<string, mixed>>
      */
     public function getGraphQLErrors(): array
@@ -51,7 +51,7 @@ class MondayApiException extends \Exception
 
     /**
      * Check if this is a GraphQL error
-     * 
+     *
      * @return bool
      */
     public function isGraphQLError(): bool
@@ -61,7 +61,7 @@ class MondayApiException extends \Exception
 
     /**
      * Check if this is an HTTP error
-     * 
+     *
      * @return bool
      */
     public function isHttpError(): bool
@@ -71,17 +71,17 @@ class MondayApiException extends \Exception
 
     /**
      * Get error details as string
-     * 
+     *
      * @return string
      */
     public function getErrorDetails(): string
     {
         $details = $this->getMessage();
-        
+
         if (!empty($this->context)) {
             $details .= ' Context: ' . json_encode($this->context);
         }
-        
+
         return $details;
     }
-} 
+}

@@ -13,7 +13,7 @@ class ConfigurationTest extends TestCase
     public function testHttpClientConfig(): void
     {
         $config = new HttpClientConfig('test-token', 60, 15, 'https://test.com');
-        
+
         $this->assertEquals('test-token', $config->getApiToken());
         $this->assertEquals(60, $config->getTimeout());
         $this->assertEquals(15, $config->getConnectTimeout());
@@ -23,7 +23,7 @@ class ConfigurationTest extends TestCase
     public function testHttpClientConfigDefaults(): void
     {
         $config = new HttpClientConfig('test-token');
-        
+
         $this->assertEquals('test-token', $config->getApiToken());
         $this->assertEquals(HttpClientConfig::DEFAULT_TIMEOUT, $config->getTimeout());
         $this->assertEquals(HttpClientConfig::DEFAULT_CONNECT_TIMEOUT, $config->getConnectTimeout());
@@ -40,7 +40,7 @@ class ConfigurationTest extends TestCase
             'base_url' => 'https://test.com'
             ]
         );
-        
+
         $this->assertEquals('test-token', $config->getApiToken());
         $this->assertEquals(60, $config->getTimeout());
         $this->assertEquals(15, $config->getConnectTimeout());
@@ -68,7 +68,7 @@ class ConfigurationTest extends TestCase
     public function testRateLimitConfig(): void
     {
         $config = new RateLimitConfig(200, 2000, 120, 600, 20000);
-        
+
         $this->assertEquals(200, $config->getMinuteLimit());
         $this->assertEquals(2000, $config->getDailyLimit());
         $this->assertEquals(120, $config->getRetryDelay());
@@ -79,7 +79,7 @@ class ConfigurationTest extends TestCase
     public function testRateLimitConfigDefaults(): void
     {
         $config = new RateLimitConfig();
-        
+
         $this->assertEquals(RateLimitConfig::DEFAULT_MINUTE_LIMIT, $config->getMinuteLimit());
         $this->assertEquals(RateLimitConfig::DEFAULT_DAILY_LIMIT, $config->getDailyLimit());
         $this->assertEquals(RateLimitConfig::DEFAULT_RETRY_DELAY, $config->getRetryDelay());
@@ -98,7 +98,7 @@ class ConfigurationTest extends TestCase
             'max_array_size' => 20000
             ]
         );
-        
+
         $this->assertEquals(200, $config->getMinuteLimit());
         $this->assertEquals(2000, $config->getDailyLimit());
         $this->assertEquals(120, $config->getRetryDelay());
@@ -121,7 +121,7 @@ class ConfigurationTest extends TestCase
     public function testLoggingConfig(): void
     {
         $config = new LoggingConfig(true, 'debug', '/var/log/monday.log');
-        
+
         $this->assertTrue($config->isEnabled());
         $this->assertEquals('debug', $config->getLevel());
         $this->assertEquals('/var/log/monday.log', $config->getFile());
@@ -130,7 +130,7 @@ class ConfigurationTest extends TestCase
     public function testLoggingConfigDefaults(): void
     {
         $config = new LoggingConfig();
-        
+
         $this->assertEquals(LoggingConfig::DEFAULT_ENABLED, $config->isEnabled());
         $this->assertEquals(LoggingConfig::DEFAULT_LEVEL, $config->getLevel());
         $this->assertNull($config->getFile());
@@ -145,7 +145,7 @@ class ConfigurationTest extends TestCase
             'file' => '/var/log/monday.log'
             ]
         );
-        
+
         $this->assertTrue($config->isEnabled());
         $this->assertEquals('debug', $config->getLevel());
         $this->assertEquals('/var/log/monday.log', $config->getFile());
@@ -162,9 +162,9 @@ class ConfigurationTest extends TestCase
         $httpClient = new HttpClientConfig('test-token');
         $rateLimit = new RateLimitConfig();
         $logging = new LoggingConfig();
-        
+
         $config = new Configuration($httpClient, $rateLimit, $logging);
-        
+
         $this->assertSame($httpClient, $config->getHttpClient());
         $this->assertSame($rateLimit, $config->getRateLimit());
         $this->assertSame($logging, $config->getLogging());
@@ -188,7 +188,7 @@ class ConfigurationTest extends TestCase
             ]
             ]
         );
-        
+
         $this->assertEquals('test-token', $config->getHttpClient()->getApiToken());
         $this->assertEquals(60, $config->getHttpClient()->getTimeout());
         $this->assertEquals(200, $config->getRateLimit()->getMinuteLimit());
@@ -206,7 +206,7 @@ class ConfigurationTest extends TestCase
             'level' => 'debug'
             ]
         );
-        
+
         $this->assertEquals('test-token', $config->getHttpClient()->getApiToken());
         $this->assertEquals(200, $config->getRateLimit()->getMinuteLimit());
         $this->assertTrue($config->getLogging()->isEnabled());
@@ -218,10 +218,10 @@ class ConfigurationTest extends TestCase
         $httpClient = new HttpClientConfig('test-token', 60);
         $rateLimit = new RateLimitConfig(200);
         $logging = new LoggingConfig(true, 'debug');
-        
+
         $config = new Configuration($httpClient, $rateLimit, $logging);
         $array = $config->toArray();
-        
+
         $this->assertEquals('test-token', $array['http_client']['api_token']);
         $this->assertEquals(60, $array['http_client']['timeout']);
         $this->assertEquals(200, $array['rate_limit']['minute_limit']);
@@ -239,9 +239,9 @@ class ConfigurationTest extends TestCase
             'enabled' => true,
             'level' => 'debug'
         ];
-        
+
         $config = Configuration::fromLegacyArray($legacyConfig);
-        
+
         // Verify all values are correctly extracted
         $this->assertEquals('test-token', $config->getApiToken());
         $this->assertEquals(200, $config->getRateLimit()->getMinuteLimit());
@@ -249,4 +249,4 @@ class ConfigurationTest extends TestCase
         $this->assertTrue($config->getLogging()->isEnabled());
         $this->assertEquals('debug', $config->getLogging()->getLevel());
     }
-} 
+}

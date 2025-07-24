@@ -4,7 +4,7 @@ namespace MondayV2SDK\Core;
 
 /**
  * Input validation and sanitization utility
- * 
+ *
  * Provides comprehensive validation for all user-provided data
  * to ensure security and data integrity.
  */
@@ -12,7 +12,7 @@ class InputValidator
 {
     /**
      * Validate and sanitize board ID
-     * 
+     *
      * @param  mixed $boardId Board ID to validate
      * @return int Validated board ID
      * @throws \InvalidArgumentException
@@ -37,7 +37,7 @@ class InputValidator
 
     /**
      * Validate and sanitize item ID
-     * 
+     *
      * @param  mixed $itemId Item ID to validate
      * @return int Validated item ID
      * @throws \InvalidArgumentException
@@ -62,7 +62,7 @@ class InputValidator
 
     /**
      * Validate and sanitize item name
-     * 
+     *
      * @param  mixed $itemName Item name to validate
      * @return string Validated item name
      * @throws \InvalidArgumentException
@@ -74,7 +74,7 @@ class InputValidator
         }
 
         $itemName = trim($itemName);
-        
+
         if (empty($itemName)) {
             throw new \InvalidArgumentException('Item name cannot be empty');
         }
@@ -85,13 +85,13 @@ class InputValidator
 
         // Remove any potentially dangerous characters
         $itemName = preg_replace('/[<>"\']/', '', $itemName);
-        
+
         return $itemName;
     }
 
     /**
      * Validate and sanitize board name
-     * 
+     *
      * @param  mixed $boardName Board name to validate
      * @return string Validated board name
      * @throws \InvalidArgumentException
@@ -103,7 +103,7 @@ class InputValidator
         }
 
         $boardName = trim($boardName);
-        
+
         if (empty($boardName)) {
             throw new \InvalidArgumentException('Board name cannot be empty');
         }
@@ -114,13 +114,13 @@ class InputValidator
 
         // Remove any potentially dangerous characters
         $boardName = preg_replace('/[<>"\']/', '', $boardName);
-        
+
         return $boardName;
     }
 
     /**
      * Validate and sanitize board description
-     * 
+     *
      * @param  mixed $description Board description to validate
      * @return string|null Validated board description
      * @throws \InvalidArgumentException
@@ -136,20 +136,20 @@ class InputValidator
         }
 
         $description = trim($description);
-        
+
         if (strlen($description) > 1000) {
             throw new \InvalidArgumentException('Board description cannot exceed 1000 characters');
         }
 
         // Remove any potentially dangerous characters
         $description = preg_replace('/[<>"\']/', '', $description);
-        
+
         return $description;
     }
 
     /**
      * Validate and sanitize column values array
-     * 
+     *
      * @param  mixed $columnValues Column values to validate
      * @return array Validated column values
      * @throws \InvalidArgumentException
@@ -166,7 +166,7 @@ class InputValidator
         }
 
         $validatedValues = [];
-        
+
         foreach ($columnValues as $columnId => $value) {
             if (!is_string($columnId)) {
                 throw new \InvalidArgumentException('Column ID must be a string');
@@ -190,7 +190,7 @@ class InputValidator
 
     /**
      * Validate and sanitize cursor for pagination
-     * 
+     *
      * @param  mixed $cursor Cursor to validate
      * @return string Validated cursor
      * @throws \InvalidArgumentException
@@ -202,7 +202,7 @@ class InputValidator
         }
 
         $cursor = trim($cursor);
-        
+
         if (empty($cursor)) {
             throw new \InvalidArgumentException('Cursor cannot be empty');
         }
@@ -217,7 +217,7 @@ class InputValidator
 
     /**
      * Validate and sanitize limit for pagination
-     * 
+     *
      * @param  mixed $limit Limit to validate
      * @return int Validated limit
      * @throws \InvalidArgumentException
@@ -246,7 +246,7 @@ class InputValidator
 
     /**
      * Validate and sanitize options array
-     * 
+     *
      * @param  mixed $options Options to validate
      * @return array Validated options
      * @throws \InvalidArgumentException
@@ -258,7 +258,7 @@ class InputValidator
         }
 
         $validatedOptions = [];
-        
+
         foreach ($options as $key => $value) {
             if (!is_string($key)) {
                 throw new \InvalidArgumentException('Option keys must be strings');
@@ -282,7 +282,7 @@ class InputValidator
 
     /**
      * Validate and sanitize email address
-     * 
+     *
      * @param  mixed $email Email to validate
      * @return string Validated email
      * @throws \InvalidArgumentException
@@ -294,7 +294,7 @@ class InputValidator
         }
 
         $email = trim($email);
-        
+
         if (empty($email)) {
             throw new \InvalidArgumentException('Email cannot be empty');
         }
@@ -312,7 +312,7 @@ class InputValidator
 
     /**
      * Validate and sanitize phone number
-     * 
+     *
      * @param  mixed $phone Phone number to validate
      * @return string Validated phone number
      * @throws \InvalidArgumentException
@@ -324,14 +324,14 @@ class InputValidator
         }
 
         $phone = trim($phone);
-        
+
         if (empty($phone)) {
             throw new \InvalidArgumentException('Phone number cannot be empty');
         }
 
         // Remove all non-digit characters for validation
         $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-        
+
         if (strlen($digitsOnly) < 10) {
             throw new \InvalidArgumentException('Phone number must contain at least 10 digits');
         }
@@ -345,7 +345,7 @@ class InputValidator
 
     /**
      * Validate and sanitize location data
-     * 
+     *
      * @param  mixed $location Location data to validate
      * @return array Validated location data
      * @throws \InvalidArgumentException
@@ -462,7 +462,7 @@ class InputValidator
 
     /**
      * Validate and sanitize status data
-     * 
+     *
      * @param  mixed $status Status data to validate
      * @return array Validated status data
      * @throws \InvalidArgumentException
@@ -491,7 +491,7 @@ class InputValidator
             if (!is_array($status['labels'])) {
                 throw new \InvalidArgumentException('Status labels must be an array');
             }
-            
+
             $validatedLabels = [];
             foreach ($status['labels'] as $label) {
                 if (!is_string($label)) {
@@ -506,11 +506,11 @@ class InputValidator
                 }
                 $validatedLabels[] = $label;
             }
-            
+
             if (empty($validatedLabels)) {
                 throw new \InvalidArgumentException('Status must contain at least one label');
             }
-            
+
             $validatedStatus['labels'] = $validatedLabels;
         }
 
@@ -536,7 +536,7 @@ class InputValidator
 
     /**
      * Validate and sanitize timeline data
-     * 
+     *
      * @param  mixed $timeline Timeline data to validate
      * @return array Validated timeline data
      * @throws \InvalidArgumentException
@@ -593,7 +593,7 @@ class InputValidator
 
     /**
      * Validate and sanitize number data
-     * 
+     *
      * @param  mixed $number Number data to validate
      * @return array Validated number data
      * @throws \InvalidArgumentException
@@ -637,4 +637,4 @@ class InputValidator
 
         return $validatedNumber;
     }
-} 
+}

@@ -4,7 +4,7 @@ namespace MondayV2SDK\Core\Configuration;
 
 /**
  * Logging configuration
- * 
+ *
  * Encapsulates all logging settings with proper validation
  * and default values.
  */
@@ -30,7 +30,7 @@ class LoggingConfig
 
     /**
      * Create from array configuration
-     * 
+     *
      * @param  array<string, mixed> $config
      * @return self
      */
@@ -45,7 +45,7 @@ class LoggingConfig
 
     /**
      * Convert to array for backward compatibility
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -59,7 +59,7 @@ class LoggingConfig
 
     /**
      * Get enabled status
-     * 
+     *
      * @return bool
      */
     public function isEnabled(): bool
@@ -69,7 +69,7 @@ class LoggingConfig
 
     /**
      * Get log level
-     * 
+     *
      * @return string
      */
     public function getLevel(): string
@@ -79,7 +79,7 @@ class LoggingConfig
 
     /**
      * Get log file path
-     * 
+     *
      * @return string|null
      */
     public function getFile(): ?string
@@ -89,13 +89,13 @@ class LoggingConfig
 
     /**
      * Validate configuration values
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     private function validate(): void
     {
         $validLevels = ['debug', 'info', 'warning', 'error', 'critical'];
-        
+
         if (!in_array($this->level, $validLevels)) {
             throw new \InvalidArgumentException(
                 'Log level must be one of: ' . implode(', ', $validLevels)
@@ -104,4 +104,4 @@ class LoggingConfig
 
         // File validation is handled by type system - no additional validation needed
     }
-} 
+}

@@ -6,7 +6,7 @@ use MondayV2SDK\Core\InputValidator;
 
 /**
  * Phone column type for Monday.com
- * 
+ *
  * Handles phone columns with proper validation and formatting.
  * Supports separate phone and text values, with fallback behavior.
  */
@@ -17,7 +17,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Constructor
-     * 
+     *
      * @param string      $columnId       The column ID
      * @param string      $phone          The phone number
      * @param string|null $text           The display text (optional, defaults to phone)
@@ -39,7 +39,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Get the column type identifier
-     * 
+     *
      * @return string
      */
     public function getType(): string
@@ -49,7 +49,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Validate the phone value
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function validate(): void
@@ -63,7 +63,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Get the column value for API
-     * 
+     *
      * @return array<string, string>
      */
     public function getValue(): array
@@ -76,7 +76,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Create a phone column with separate phone and text values
-     * 
+     *
      * @param  string $columnId The column ID
      * @param  string $phone    The phone number
      * @param  string $text     The display text
@@ -89,7 +89,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Create an empty phone column
-     * 
+     *
      * @param  string $columnId The column ID
      * @return self
      */
@@ -100,7 +100,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Get the phone number
-     * 
+     *
      * @return string
      */
     public function getPhone(): string
@@ -110,7 +110,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Get the display text
-     * 
+     *
      * @return string|null
      */
     public function getText(): ?string
@@ -120,7 +120,7 @@ class PhoneColumn extends AbstractColumnType
 
     /**
      * Validate phone number format
-     * 
+     *
      * @param  string $phone
      * @return bool
      */
@@ -128,10 +128,8 @@ class PhoneColumn extends AbstractColumnType
     {
         // Remove all non-digit characters
         $digits = preg_replace('/[^0-9]/', '', $phone);
-        
+
         // Check if we have at least 10 digits (standard US phone number)
         return strlen((string) $digits) >= 10;
     }
-
-
-} 
+}
