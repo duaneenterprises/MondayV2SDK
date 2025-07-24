@@ -1,8 +1,6 @@
 name: Test Monday.com PHP SDK
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -20,14 +18,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php }}
-        extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, phar, reflection, session, simplexml, spl, standard, tokenizer, xml, xmlreader, xmlwriter, zip, zlib
-        coverage: xdebug
-        tools: composer:v2
+
         
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -75,12 +66,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 8.4
-        tools: composer:v2
         
     - name: Install dependencies
       run: composer install --prefer-dist --no-dev
@@ -102,12 +87,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 8.4
-        tools: composer:v2
-        
     - name: Install dependencies
       run: composer install --prefer-dist
       
